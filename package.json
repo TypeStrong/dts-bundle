@@ -1,0 +1,42 @@
+{
+  "name": "export-dts-bundle",
+  "version": "0.1.0",
+  "description": "Export TypeScript .d.ts files as an external module defintion",
+  "keywords": [
+    "typescript",
+    "definition",
+    "bundle",
+    "export",
+    "d.ts"
+  ],
+  "homepage": "https://github.com/grunt-ts/export-dts-bundle",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/grunt-ts/export-dts-bundle.git"
+  },
+  "author": {
+    "name": "Bart van der Schoor",
+    "url": "https://github.com/Bartvds"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://raw.github.com/grunt-ts/export-dts-bundle/master/LICENSE-MIT.txt"
+    }
+  ],
+  "bugs": {
+    "url": "https://github.com/grunt-ts/export-dts-bundle/issues"
+  },
+  "engines": {
+    "node": ">= 0.10.0"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "main": "./index.js",
+  "dependencies": {
+      "detect-indent": "^0.1.4"
+  },
+  "devDependencies": {
+  }
+}

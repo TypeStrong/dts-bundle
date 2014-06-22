@@ -3,14 +3,10 @@
 
 /node_modules
 
-/dist
-/cache
-/scratch
-/tsd-cache
 /test/tmp
+/test/build
 
 /tscommand*
-ignoreBaseDirFile.*
 .tscache
 
 /*.tgz

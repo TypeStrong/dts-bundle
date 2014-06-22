@@ -36,8 +36,8 @@ Let's assume the project is called `cool-project` main module is `build/index.js
 var dts = require('export-dts-bundle');
 
 dts.bundle({
-    main: 'build/index.d.ts',
-    name: 'cool-project'
+    name: 'cool-project',
+    main: 'build/index.d.ts'
 });
 ````
 

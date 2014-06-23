@@ -35,7 +35,7 @@
   },
   "main": "./index.js",
   "dependencies": {
-    "detect-indent": "^0.1.4",
+    "detect-indent": "^0.2.0",
     "glob": "^4.0.2"
   },
   "devDependencies": {

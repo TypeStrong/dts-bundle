@@ -41,7 +41,9 @@ dts.bundle({
 });
 ````
 
-This will traverse all references and imports for the .d.ts file of your sub-modules. Then it replace the `build/index.d.ts` file with the bundle of all visible imports.
+This will traverse all references and imports for the .d.ts file of your sub-modules.
+
+Then it replaces the `build/index.d.ts` file with the bundle of all visible imports.
 
 It will also remove the other `.d.ts` files.
 
@@ -49,11 +51,11 @@ It will also remove the other `.d.ts` files.
 
 ````json
 {
-    name: "cool-project",
-    version: "0.1.3"
-    // ..
-    typescript: {
-        definition: "build/index.d.ts"
+    "name": "cool-project",
+    "version": "0.1.3"
+
+    "typescript": {
+        "definition": "build/index.d.ts"
     }
 }
 ````

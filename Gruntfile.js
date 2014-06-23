@@ -17,7 +17,13 @@ module.exports = function (grunt) {
 				options: {
 					node: true
 				},
-				src: ['Gruntfile.js', 'tasks/**/*.*.js']
+				src: ['Gruntfile.js', 'tasks/**/*.js']
+			},
+			lib: {
+				options: {
+					node: true
+				},
+				src: ['lib/**/*.js']
 			}
 		},
 		copy: {
@@ -72,7 +78,8 @@ module.exports = function (grunt) {
 		'clean:tmp',
 		'clean:test',
 		'clean:cruft',
-		'jshint:support'
+		'jshint:support',
+		'jshint:lib'
 	]);
 
 	grunt.registerTask('test', [

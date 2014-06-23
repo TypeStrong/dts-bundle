@@ -1,6 +1,6 @@
 # dts-bundle
 
-[![Build Status](https://secure.travis-ci.org/grunt-ts/dts-bundle.svg?branch=master)](http://travis-ci.org/grunt-ts/dts-bundle) [![NPM version](https://badge.fury.io/js/dts-bundle.svg)](http://badge.fury.io/js/dts-bundle) [![Dependency Status](https://david-dm.org/grunt-ts/dts-bundle.svg)](https://david-dm.org/grunt-ts/dts-bundle) [![devDependency Status](https://david-dm.org/grunt-ts/dts-bundle/dev-status.svg)](https://david-dm.org/grunt-ts/dts-bundle#info=devDependencies) [![Build status](https://ci.appveyor.com/api/projects/status/usywa9w6kd7ssskv)](https://ci.appveyor.com/project/BartvanderSchoor/dts-bundle)
+[![Build Status](https://secure.travis-ci.org/grunt-ts/dts-bundle.svg?branch=master)](http://travis-ci.org/grunt-ts/dts-bundle) [![NPM version](https://badge.fury.io/js/dts-bundle.svg)](http://badge.fury.io/js/dts-bundle) [![Dependency Status](https://david-dm.org/grunt-ts/dts-bundle.svg)](https://david-dm.org/grunt-ts/dts-bundle) [![devDependency Status](https://david-dm.org/grunt-ts/dts-bundle/dev-status.svg)](https://david-dm.org/grunt-ts/dts-bundle#info=devDependencies)
 
 > Export TypeScript .d.ts files as an external module definition
 

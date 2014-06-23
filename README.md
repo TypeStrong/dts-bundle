@@ -30,7 +30,7 @@ npm install dts-bundle
 
 3) Run `dts-bundle`
 
-Let's assume the project is called `cool-project` main module is `build/index.js` with a `build/index.d.ts`:
+Let's assume the project is called `cool-project` and the main module is `build/index.js` with a `build/index.d.ts`:
 
 ````js
 var dts = require('dts-bundle');

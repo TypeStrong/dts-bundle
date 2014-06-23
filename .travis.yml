@@ -3,6 +3,5 @@ node_js:
   - "0.11"
   - "0.10"
 
-notifications:
-  email:
-    - bartvanderschoor@gmail.com
+before_install:
+  - npm install -g grunt-cli

@@ -24,6 +24,7 @@ describe('dts bundle', function () {
 		dts.bundle({
 			name: 'foo-mx',
 			main: path.join(tmpDir, 'index.d.ts'),
+			newline: '\n'
 		});
 	});
 

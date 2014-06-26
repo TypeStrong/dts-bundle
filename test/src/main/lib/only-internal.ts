@@ -1,6 +1,3 @@
-// This file is not mentioned in any 'external' interface in index.ts,
-// so it will not end up in the generated typings.
-
 /// <reference path="../../typings/external.d.ts" />
 
 import Foo = require('../Foo');

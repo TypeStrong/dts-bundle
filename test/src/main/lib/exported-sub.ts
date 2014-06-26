@@ -1,7 +1,4 @@
-﻿// This file is mentioned in the 'external' interface in index.ts,
-// so it will end up in the generated typings.
-
-/// <reference path="../../typings/external.d.ts" />
+﻿/// <reference path="../../typings/external.d.ts" />
 
 import Foo = require('../Foo');
 import mod2 = require('external2');

@@ -34,23 +34,35 @@ function assertFiles(base, expHave, expNot) {
 	assert.deepEqual(have, fixPaths(expHave), base);
 }
 
-describe('dts bundle', function () {
+function testit(name, assertion, run) {
+	var call = function (done) {
+		var testDir = path.join(tmpDir, name);
+		var expDir = path.join(expectDir, name);
 
-	function testit(name, assertion) {
-		it('bundle ' + name, function (done) {
-			var testDir = path.join(tmpDir, name);
-			var expDir = path.join(expectDir, name);
-
-			ncp.ncp(buildDir, testDir, function (err) {
-				if (err) {
-					done(err);
-					return;
-				}
-				assertion(testDir, expDir);
-				done();
-			});
+		ncp.ncp(buildDir, testDir, function (err) {
+			if (err) {
+				done(err);
+				return;
+			}
+			assertion(testDir, expDir);
+			done();
 		});
+	};
+
+	var label = 'bundle ' + name;
+
+	if (run === 'skip') {
+		it.skip(label, call);
 	}
+	else if (run === 'only') {
+		it.only(label, call);
+	}
+	else {
+		it(label, call);
+	}
+}
+
+describe('dts bundle', function () {
 
 	testit('default', function (actDir, expDir) {
 		dts.bundle({
@@ -75,7 +87,7 @@ describe('dts bundle', function () {
 		dts.bundle({
 			name: 'foo-mx',
 			main: path.join(actDir, 'index.d.ts'),
-			removeTypings: true,
+			removeSource: true,
 			newline: '\n'
 		});
 		var name = 'foo-mx.d.ts';
@@ -111,7 +123,7 @@ describe('dts bundle', function () {
 		dts.bundle({
 			name: 'bar-mx',
 			main: path.join(actDir, 'index.d.ts'),
-			removeTypings: true,
+			removeSource: true,
 			prefix: '--',
 			separator: '#',
 			indent: '        ',
@@ -126,11 +138,11 @@ describe('dts bundle', function () {
 		assert.strictEqual(getFile(actualFile), getFile(expectedFile));
 	});
 
-	testit('includeExternal', function (actDir, expDir) {
+	testit('externals', function (actDir, expDir) {
 		dts.bundle({
 			name: 'foo-mx',
 			main: path.join(actDir, 'index.d.ts'),
-			includeExternal: true,
+			externals: true,
 			newline: '\n'
 		});
 		var name = 'foo-mx.d.ts';
@@ -146,12 +158,11 @@ describe('dts bundle', function () {
 		assert.strictEqual(getFile(actualFile), getFile(expectedFile));
 	});
 
-	testit('excludeTypingsExp', function (actDir, expDir) {
+	testit('excludeExp', function (actDir, expDir) {
 		dts.bundle({
 			name: 'foo-mx',
-			verbose: true,
 			main: path.join(actDir, 'index.d.ts'),
-			excludeTypingsExp: /exported-sub\.d\.ts/,
+			exclude: /exported\-sub/,
 			newline: '\n'
 		});
 		var name = 'foo-mx.d.ts';
@@ -161,6 +172,50 @@ describe('dts bundle', function () {
 			name,
 			'index.d.ts',
 			'Foo.d.ts',
+			'lib/exported-sub.d.ts',
+			'lib/only-internal.d.ts'
+		]);
+		assert.strictEqual(getFile(actualFile), getFile(expectedFile));
+	});
+
+	testit('excludeFunc', function (actDir, expDir) {
+		dts.bundle({
+			name: 'foo-mx',
+			main: path.join(actDir, 'index.d.ts'),
+			exclude: function(file) {
+				return /exported\-sub/.test(file);
+			},
+			newline: '\n'
+		});
+		var name = 'foo-mx.d.ts';
+		var actualFile = path.join(actDir, name);
+		var expectedFile = path.join(expDir, name);
+		assertFiles(actDir, [
+			name,
+			'index.d.ts',
+			'Foo.d.ts',
+			'lib/exported-sub.d.ts',
+			'lib/only-internal.d.ts'
+		]);
+		assert.strictEqual(getFile(actualFile), getFile(expectedFile));
+	});
+
+	testit('includeExclude', function (actDir, expDir) {
+		dts.bundle({
+			name: 'foo-mx',
+			main: path.join(actDir, 'index.d.ts'),
+			externals: true,
+			exclude: /exported\-sub/,
+			newline: '\n'
+		});
+		var name = 'foo-mx.d.ts';
+		var actualFile = path.join(actDir, name);
+		var expectedFile = path.join(expDir, name);
+		assertFiles(actDir, [
+			name,
+			'index.d.ts',
+			'Foo.d.ts',
+			'lib/exported-sub.d.ts',
 			'lib/only-internal.d.ts'
 		]);
 		assert.strictEqual(getFile(actualFile), getFile(expectedFile));

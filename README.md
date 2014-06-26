@@ -92,14 +92,16 @@ var opts = {
     out: 'dist/cool-project.d.ts',
 	// include typings outside of the 'baseDir' (i.e. like node.d.ts)
 	// - default: false 
-    includeExternal: false, 
-	// regEx to completely exclude typings, match path relative to opts.baseDir
+    externals: false,
+	// filter to exclude typings, either a RegExp or a callback. match path relative to opts.baseDir
+	// - RegExp: a match excludes the file
+	// - function: (file:String, external:Boolean) return true to exclude, false to allow
 	// - always use forward-slashes (even on Windows)
-	// - default new RegExp('^' + regexEscape(out) + '$')
-    excludeTypingsExp: /^defs\/$/,
+	// - default: *pass*
+    exclude: /^defs\/$/,
   	// delete all source typings (i.e. "<baseDir>/**/*.d.ts")
 	// - default: false
-    removeTypings: false,
+    removeSource: false,
 	// newline to use in output file 
     newline: os.EOL,
 	// indentation to use in output file

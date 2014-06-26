@@ -99,7 +99,7 @@ var opts = {
     excludeTypingsExp: /^defs\/$/,
   	// delete all source typings (i.e. "<baseDir>/**/*.d.ts")
 	// - default: false
-    deleteSourceTypings: false,
+    removeTypings: false,
 	// newline to use in output file 
     newline: os.EOL,
 	// indentation to use in output file

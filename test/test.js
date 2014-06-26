@@ -2,6 +2,7 @@ var fs = require('fs');
 var path = require('path');
 var glob = require('glob');
 var chai = require('chai');
+var mkdirp = require('mkdirp');
 var ncp = require('ncp');
 
 chai.use(require('chai-fs'));
@@ -38,6 +39,8 @@ function testit(name, assertion, run) {
 	var call = function (done) {
 		var testDir = path.join(tmpDir, name);
 		var expDir = path.join(expectDir, name);
+
+		mkdirp.sync(testDir);
 
 		ncp.ncp(buildDir, testDir, function (err) {
 			if (err) {

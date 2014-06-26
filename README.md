@@ -41,11 +41,9 @@ dts.bundle({
 });
 ````
 
-This will traverse all references and imports for the .d.ts file of your sub-modules.
+This will traverse all references and imports for the .d.ts files of your sub-modules.
 
-Then it replaces the `build/index.d.ts` file with the bundle of all visible imports.
-
-It will also remove the other `.d.ts` files.
+Then it writes `build/cool-project.d.ts` with the bundle of all 'local' imports.
 
 4) Extra bonus points if you link the generated definition in your package.json (or bower.json), in the typescript element:
 
@@ -55,12 +53,39 @@ It will also remove the other `.d.ts` files.
     "version": "0.1.3"
 
     "typescript": {
-        "definition": "build/index.d.ts"
+        "definition": "build/cool-project.d.ts"
     }
 }
 ````
 
 Using this makes the definition findable for tooling, for example the [TypeScript Definitions package manager](https://github.com/DefinitelyTyped/tsd) (from v0.6.x) can auto-link these into it `tsd.d.ts` bundle file (wow, so convenient).
+
+## Options
+
+Here is a list of all options, with their defaults:
+
+````js
+var opts = {
+    // Required
+    name: undefined, // Name of module (i.e. declare module "<name>")
+    main: undefined, // Relative or absolute path to entry-point, e.g. "lib/index.d.ts"
+
+    // Optional
+    verbose: false, // Enable verbose mode, prints detailed info about all references it finds and includes/excludes
+    baseDir: path.dirname(opts.main), // Base directory to be used for discovering 'source typings', i.e. typings that belong to your project, defaults to directory where main is found
+    out: opts.name + '.d.ts', // Path of output file, defaults to "<baseDir>/<name>.d.ts"
+    includeExternal: false, // Whether to include typings that were found outside of the 'source typings' (typically stuff like node.d.ts)
+    excludeTypingsExp: new RegExp('^' + regexEscape(out) + '$'), // RegEx to completely exclude typings from consideration (used to match a path relative to opts.baseDir, note: always use forward-slashes in it, even on Windows)
+    deleteSourceTypings: false, // Whether to delete all source typings (i.e. "<baseDir>/**/*.d.ts")
+    newline: os.EOL, // Newline to use in output file
+    indent: '    ', // Indentation to use in output file
+    prefix: '__', // Prefix for rewriting module names
+    separator: '/', // Separator for rewriting module names
+};
+
+var dts = require('dts-bundle');
+dts.bundle(opts);
+````
 
 ## Todo
 
@@ -73,6 +98,7 @@ Using this makes the definition findable for tooling, for example the [TypeScrip
 
 They are very welcome. Beware this module is a quick hack-job so good luck!
 
+* Martin Poelstra (@poelstra): Exclude 'external' typings (such as node.d.ts) by default, fixed hang bug, optional debug output, more configurability.
 
 ## License
 

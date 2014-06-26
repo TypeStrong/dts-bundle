@@ -13,23 +13,24 @@ var baseDir = __dirname;
 var expectDir = path.resolve(__dirname, 'expected');
 var tmpDir = path.resolve(__dirname, 'tmp');
 
+var bomOptExp = /^\uFEFF?/;
+
+function getFile(f) {
+	return fs.readFileSync(f, 'utf8').replace(bomOptExp, '').replace(/\s*$/, '');
+}
+
 describe('dts bundle', function () {
 	before(function () {
 		dts.bundle({
 			name: 'foo-mx',
-			main: path.join(tmpDir, 'index.d.ts')
+			main: path.join(tmpDir, 'index.d.ts'),
 		});
 	});
 
-	it('created files', function () {
-		assert.isFile(path.join(tmpDir, 'index.js'));
-		assert.isFile(path.join(tmpDir, 'index.d.ts'));
-		assert.isFile(path.join(tmpDir, 'Foo.js'));
-		assert.isFile(path.join(tmpDir, 'lib', 'barbazz.js'));
-	});
-
-	it('removed files', function () {
-		assert.notPathExists(path.join(tmpDir, 'Foo.d.ts'));
-		assert.notPathExists(path.join(tmpDir, 'lib', 'barbazz.d.ts'));
+	it('generated expected typing', function () {
+		var actualFile = path.join(tmpDir, 'foo-mx.d.ts');
+		var expectedFile = path.join(expectDir, 'foo-mx.d.ts');
+		assert.isFile(actualFile);
+		assert.deepEqual(getFile(actualFile), getFile(expectedFile));
 	});
 });

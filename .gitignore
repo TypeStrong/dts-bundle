@@ -5,6 +5,10 @@
 
 /test/tmp
 /test/build
+!/test/src/typings/*.d.ts
+/test/src/**/*.d.ts
+/test/src/**/*.js
+/test/src/**/*.js.map
 
 /tscommand*
 .tscache

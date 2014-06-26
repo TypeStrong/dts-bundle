@@ -5,7 +5,6 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-mocha-test');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-clean');
-	grunt.loadNpmTasks('grunt-contrib-copy');
 
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
@@ -26,13 +25,6 @@ module.exports = function (grunt) {
 				src: ['lib/**/*.js']
 			}
 		},
-		copy: {
-			test: {
-				files: [
-					{expand: true, cwd: 'test/build', src: ['**'], dest: 'test/tmp'}
-				]
-			}
-		},
 		clean: {
 			cruft: {
 				option: {
@@ -44,11 +36,11 @@ module.exports = function (grunt) {
 				]
 			},
 			tmp: [
-				'tmp/**/*'
+				'tmp/**/*',
+				'test/tmp/**/*'
 			],
 			test: [
-				'test/build/**/*',
-				'test/tmp/**/*'
+				'test/build/**/*'
 			]
 		},
 		ts: {
@@ -60,12 +52,13 @@ module.exports = function (grunt) {
 				sourceMap: false
 			},
 			test: {
-				src: ['test/src/*.ts'],
-				outDir: 'test/build/'
+				src: ['test/src/main/index.ts'],
+				outDir: 'test/build/sub/'
 			}
 		},
 		mochaTest: {
 			options: {
+				timeout: 5000,
 				reporter: 'mocha-unfunk-reporter'
 			},
 			all: {
@@ -74,22 +67,25 @@ module.exports = function (grunt) {
 		}
 	});
 
+	grunt.registerTask('lint', [
+		'jshint'
+	]);
+
 	grunt.registerTask('prep', [
 		'clean:tmp',
 		'clean:test',
 		'clean:cruft',
-		'jshint:support',
-		'jshint:lib'
+		'lint'
 	]);
 
 	grunt.registerTask('test', [
 		'prep',
 		'ts:test',
-		'dev'
+		'run'
 	]);
 
-	grunt.registerTask('dev', [
-		'copy:test',
+	grunt.registerTask('run', [
+		'clean:tmp',
 		'mochaTest:all',
 		'sweep'
 	]);

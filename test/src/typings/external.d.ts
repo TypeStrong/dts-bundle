@@ -9,15 +9,15 @@
 // happens with e.g. node.d.ts.
 
 // This one is used/returned from the index file
-declare module "external1" {
-	export class SomeType {
-		foo(): void;
-	}
+declare module 'external1' {
+    export class SomeType {
+        foo(): void;
+    }
 }
 
 // This one is used in a subdirectory
-declare module "external2" {
-	export class AnotherType {
-		foo(): void;
-	}
+declare module 'external2' {
+    export class AnotherType {
+        foo(): void;
+    }
 }

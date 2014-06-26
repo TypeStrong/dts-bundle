@@ -28,6 +28,12 @@ npm install dts-bundle
 
 2) Compile your modules with the TypeScript compiler of your choice with the `--declaration` and `--outDir` flags (and probably `--module commonjs` too).
 
+Something like:
+
+````shell
+tsc src/index.ts --declaration --module commonjs --target es5 --outDir build
+````
+
 3) Run `dts-bundle`
 
 Let's assume the project is called `cool-project` and the main module is `build/index.js` with a `build/index.d.ts`:
@@ -50,7 +56,7 @@ Then it writes `build/cool-project.d.ts` with the bundle of all 'local' imports.
 ````json
 {
     "name": "cool-project",
-    "version": "0.1.3"
+    "version": "0.1.3",
 
     "typescript": {
         "definition": "build/cool-project.d.ts"
@@ -60,32 +66,61 @@ Then it writes `build/cool-project.d.ts` with the bundle of all 'local' imports.
 
 Using this makes the definition findable for tooling, for example the [TypeScript Definitions package manager](https://github.com/DefinitelyTyped/tsd) (from v0.6.x) can auto-link these into it `tsd.d.ts` bundle file (wow, so convenient).
 
+
 ## Options
 
-Here is a list of all options, with their defaults:
+Example of all options:
 
 ````js
 var opts = {
     // Required
-    name: undefined, // Name of module (i.e. declare module "<name>")
-    main: undefined, // Relative or absolute path to entry-point, e.g. "lib/index.d.ts"
+
+	// name of module
+	// - used to declare module & import/require
+    name: 'cool-project', 
+	// path to entry-point (generated .d.ts file for main module)
+	// - either relative or absolute 
+    main: 'build/index.d.ts', 
 
     // Optional
-    verbose: false, // Enable verbose mode, prints detailed info about all references it finds and includes/excludes
-    baseDir: path.dirname(opts.main), // Base directory to be used for discovering 'source typings', i.e. typings that belong to your project, defaults to directory where main is found
-    out: opts.name + '.d.ts', // Path of output file, defaults to "<baseDir>/<name>.d.ts"
-    includeExternal: false, // Whether to include typings that were found outside of the 'source typings' (typically stuff like node.d.ts)
-    excludeTypingsExp: new RegExp('^' + regexEscape(out) + '$'), // RegEx to completely exclude typings from consideration (used to match a path relative to opts.baseDir, note: always use forward-slashes in it, even on Windows)
-    deleteSourceTypings: false, // Whether to delete all source typings (i.e. "<baseDir>/**/*.d.ts")
-    newline: os.EOL, // Newline to use in output file
-    indent: '    ', // Indentation to use in output file
-    prefix: '__', // Prefix for rewriting module names
-    separator: '/', // Separator for rewriting module names
+
+	// base directory to be used for discovering type declarations (i.e. from this project itself) 
+	// - default: dirname of main
+    baseDir: 'build',
+	// path of output file
+	// - default: "<baseDir>/<name>.d.ts" 
+    out: 'dist/cool-project.d.ts',
+	// include typings outside of the 'baseDir' (i.e. like node.d.ts)
+	// - default: false 
+    includeExternal: false, 
+	// regEx to completely exclude typings, match path relative to opts.baseDir
+	// - always use forward-slashes (even on Windows)
+	// - default new RegExp('^' + regexEscape(out) + '$')
+    excludeTypingsExp: /^defs\/$/,
+  	// delete all source typings (i.e. "<baseDir>/**/*.d.ts")
+	// - default: false
+    deleteSourceTypings: false,
+	// newline to use in output file 
+    newline: os.EOL,
+	// indentation to use in output file
+	// - default 4 spaces
+    indent: '    ', 
+	// prefix for rewriting module names 
+	// - default '__'
+    prefix: '__', 
+	// separator for rewriting module 'path' names
+	// - default: forward slash (like sub-modules)
+    separator: '/', 
+	// enable verbose mode, prints detailed info about all references and includes/excludes
+	// - default: false
+    verbose: false, 
 };
 
 var dts = require('dts-bundle');
+
 dts.bundle(opts);
 ````
+
 
 ## Todo
 
@@ -98,7 +133,8 @@ dts.bundle(opts);
 
 They are very welcome. Beware this module is a quick hack-job so good luck!
 
-* Martin Poelstra (@poelstra): Exclude 'external' typings (such as node.d.ts) by default, fixed hang bug, optional debug output, more configurability.
+* Martin Poelstra (@poelstra): Exclude 'external' typings, optional debug output, improved configurability.
+
 
 ## License
 

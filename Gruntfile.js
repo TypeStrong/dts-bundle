@@ -49,6 +49,7 @@ module.exports = function (grunt) {
 				target: 'es5',
 				module: 'commonjs',
 				declaration: true,
+				removeComments: false,
 				sourceMap: false
 			},
 			test: {

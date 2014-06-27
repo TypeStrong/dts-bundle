@@ -129,8 +129,8 @@ describe('dts bundle', function () {
 			removeSource: true,
 			prefix: '--',
 			separator: '#',
-			indent: '        ',
-			newline: '//$\n'
+			indent: '\t',
+			newline: ' //$\n'
 		});
 		var name = 'bar-mx.d.ts';
 		var actualFile = path.join(actDir, name);

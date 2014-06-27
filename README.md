@@ -42,8 +42,8 @@ Let's assume the project is called `cool-project` and the main module is `build/
 var dts = require('dts-bundle');
 
 dts.bundle({
-    name: 'cool-project',
-    main: 'build/index.d.ts'
+	name: 'cool-project',
+	main: 'build/index.d.ts'
 });
 ````
 
@@ -55,16 +55,21 @@ Then it writes `build/cool-project.d.ts` with the bundle of all 'local' imports.
 
 ````json
 {
-    "name": "cool-project",
-    "version": "0.1.3",
+	"name": "cool-project",
+	"version": "0.1.3",
 
-    "typescript": {
-        "definition": "build/cool-project.d.ts"
-    }
+	"typescript": {
+		"definition": "build/cool-project.d.ts"
+	}
 }
 ````
 
 Using this makes the definition findable for tooling, for example the [TypeScript Definitions package manager](https://github.com/DefinitelyTyped/tsd) (from v0.6.x) can auto-link these into it `tsd.d.ts` bundle file (wow, so convenient).
+
+
+### Wrappers
+
+There is also a Grunt plugin [grunt-dts-bundle](https://www.github.com/grunt-ts/grunt-dts-bundle) that goes well with Grunt based compiler, like [grunt-ts](https://www.github.com/grunt-ts/grunt-ts) or [grunt-typescript](https://github.com/k-maru/grunt-typescript).
 
 
 ## Options
@@ -73,53 +78,56 @@ Example of all options:
 
 ````js
 var opts = {
-    // Required
 
-	// name of module
+	// Required
+
+	// name of module likein package.json
 	// - used to declare module & import/require
-    name: 'cool-project', 
+	name: 'cool-project', 
 	// path to entry-point (generated .d.ts file for main module)
 	// - either relative or absolute 
-    main: 'build/index.d.ts', 
+	main: 'build/index.d.ts', 
 
-    // Optional
+	// Optional
 
 	// base directory to be used for discovering type declarations (i.e. from this project itself) 
 	// - default: dirname of main
-    baseDir: 'build',
+	baseDir: 'build',
 	// path of output file
 	// - default: "<baseDir>/<name>.d.ts" 
-    out: 'dist/cool-project.d.ts',
+	out: 'dist/cool-project.d.ts',
 	// include typings outside of the 'baseDir' (i.e. like node.d.ts)
 	// - default: false 
-    externals: false,
+	externals: false,
 	// filter to exclude typings, either a RegExp or a callback. match path relative to opts.baseDir
 	// - RegExp: a match excludes the file
 	// - function: (file:String, external:Boolean) return true to exclude, false to allow
 	// - always use forward-slashes (even on Windows)
 	// - default: *pass*
-    exclude: /^defs\/$/,
+	exclude: /^defs\/$/,
   	// delete all source typings (i.e. "<baseDir>/**/*.d.ts")
 	// - default: false
-    removeSource: false,
+	removeSource: false,
 	// newline to use in output file 
-    newline: os.EOL,
+	newline: os.EOL,
 	// indentation to use in output file
 	// - default 4 spaces
-    indent: '    ', 
-	// prefix for rewriting module names 
+	indent: '	', 
+	// prefix for rewriting module names
 	// - default '__'
-    prefix: '__', 
+	prefix: '__', 
 	// separator for rewriting module 'path' names
 	// - default: forward slash (like sub-modules)
-    separator: '/', 
+	separator: '/', 
 	// enable verbose mode, prints detailed info about all references and includes/excludes
 	// - default: false
-    verbose: false, 
+	verbose: false, 
 };
 
+// require module
 var dts = require('dts-bundle');
 
+// run it
 dts.bundle(opts);
 ````
 
@@ -128,7 +136,14 @@ dts.bundle(opts);
 
 - add feature to create a DefinitelyTyped header (using `definition-header` package)
 - add feature to auto-update package.json/bower.json with the definition link
-- find time to implement a real, parser based solution
+- find time to implement a parser based solution
+- run IO asyncronous (lame excuse: original code was extracted from a grunt-task)
+
+
+# History
+
+- 0.2.x - Fixed bugs & added many options (thanks @poelstra)
+- 0.1.x - First release
 
 
 ## Contributions

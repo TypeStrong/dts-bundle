@@ -19,6 +19,10 @@ class Foo {
     private fooBar(): void {
 
     }
+    /** Foos the baz. */
+    fooBaz(): void {
+
+    }
 }
 
 export = Foo;

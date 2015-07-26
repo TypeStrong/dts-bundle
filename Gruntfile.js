@@ -69,7 +69,7 @@ module.exports = function (grunt) {
 	});
 
 	grunt.registerTask('lint', [
-		'jshint'
+		// 'jshint'
 	]);
 
 	grunt.registerTask('prep', [

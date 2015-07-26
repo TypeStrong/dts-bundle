@@ -1,0 +1,31 @@
+{
+    "version": "1.5.3",
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "isolatedModules": false,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "declaration": false,
+        "noImplicitAny": true,
+        "removeComments": true,
+        "noLib": false,
+        "preserveConstEnums": false,
+        "suppressImplicitAnyIndexErrors": false
+    },
+    "filesGlob": [
+        "./**/*.ts",
+        "../typings/**/*.ts",
+        "./**/*.tsx",
+        "!./node_modules/**/*"
+    ],
+    "files": [
+        "./index.ts",
+        "../typings/bundle.d.ts",
+        "../typings/detect-indent/detect-indent.d.ts",
+        "../typings/glob/glob.d.ts",
+        "../typings/minimatch/minimatch.d.ts",
+        "../typings/mkdirp/mkdirp.d.ts",
+        "../typings/node/node.d.ts"
+    ]
+}

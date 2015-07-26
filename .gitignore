@@ -2,6 +2,7 @@
 /.vagrant
 
 /node_modules
+/typings
 
 /test/tmp
 /test/build

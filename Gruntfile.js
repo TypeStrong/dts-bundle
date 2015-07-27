@@ -2,27 +2,17 @@ module.exports = function (grunt) {
 	'use strict';
 
 	grunt.loadNpmTasks('grunt-ts');
+	grunt.loadNpmTasks('grunt-dtsm');
 	grunt.loadNpmTasks('grunt-mocha-test');
-	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-clean');
 
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
-		jshint: {
-			options: grunt.util._.extend(grunt.file.readJSON('.jshintrc'), {
-				reporter: './node_modules/jshint-path-reporter'
-			}),
-			support: {
+		dtsm: {
+			client: {
 				options: {
-					node: true
-				},
-				src: ['Gruntfile.js', 'tasks/**/*.js']
-			},
-			lib: {
-				options: {
-					node: true
-				},
-				src: ['lib/**/*.js']
+					confog: './dtsm.json'
+				}
 			}
 		},
 		clean: {
@@ -52,6 +42,25 @@ module.exports = function (grunt) {
 				removeComments: false,
 				sourceMap: false
 			},
+			main: {
+				src: [
+					'./lib/index.ts',
+					'./typings/bundle.d.ts'
+				],
+				options: {
+					"target": "es5",
+					"module": "commonjs",
+					"isolatedModules": false,
+					"experimentalDecorators": true,
+					"emitDecoratorMetadata": true,
+					"declaration": false,
+					"noImplicitAny": true,
+					"removeComments": true,
+					"noLib": false,
+					"preserveConstEnums": false,
+					"suppressImplicitAnyIndexErrors": false
+				}
+			},
 			test: {
 				src: ['test/src/main/index.ts'],
 				outDir: 'test/build/sub/'
@@ -68,15 +77,11 @@ module.exports = function (grunt) {
 		}
 	});
 
-	grunt.registerTask('lint', [
-		// 'jshint'
-	]);
-
 	grunt.registerTask('prep', [
 		'clean:tmp',
 		'clean:test',
 		'clean:cruft',
-		'lint'
+		'dtsm'
 	]);
 
 	grunt.registerTask('test', [
@@ -87,6 +92,7 @@ module.exports = function (grunt) {
 
 	grunt.registerTask('run', [
 		'clean:tmp',
+		'ts:main',
 		'mochaTest:all',
 		'sweep'
 	]);

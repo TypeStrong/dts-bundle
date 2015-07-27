@@ -23,12 +23,12 @@ declare module '__foo-mx/lib/exported-sub' {
 
 declare module '__foo-mx/Foo' {
     class Foo {
-        foo: string;
-        constructor(secret?: string);
-        /**
-         * Bars the foo.
-         */
-        barFoo(): void;
+            foo: string;
+            constructor(secret?: string);
+            /**
+                * Bars the foo.
+                */
+            barFoo(): void;
     }
     export = Foo;
 }

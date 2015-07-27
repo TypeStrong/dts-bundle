@@ -4,6 +4,8 @@
 /node_modules
 /typings
 
+/lib/**/*.js
+
 /test/tmp
 /test/build
 !/test/src/typings/*.d.ts

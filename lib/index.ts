@@ -20,7 +20,7 @@ const referenceTagExp = /^[ \t]*\/\/\/[ \t]*<reference[ \t]+path=(["'])(.*?)\1?[
 const identifierExp = /^\w+(?:[\.-]\w+)*$/;
 const fileExp = /^([\./].*|.:.*)$/;
 const privateExp = /^[ \t]*(?:static )?private (?:static )?/;
-const publicExp = /^([ \t]*)(static |)(public )(static |)(.*)/;
+const publicExp = /^([ \t]*)(static |)(public |)(static |)(.*)/;
 
 export interface Options {
     main: string;

@@ -2,6 +2,9 @@
 /.vagrant
 
 /node_modules
+/typings
+
+/lib/**/*.js
 
 /test/tmp
 /test/build

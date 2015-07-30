@@ -64,6 +64,10 @@ module.exports = function (grunt) {
 			test: {
 				src: ['test/src/main/index.ts'],
 				outDir: 'test/build/sub/'
+			},
+			testEs6: {
+				src: ['test/src/es6/index.ts'],
+				outDir: 'test/build/es6/'
 			}
 		},
 		mochaTest: {
@@ -87,6 +91,7 @@ module.exports = function (grunt) {
 	grunt.registerTask('test', [
 		'prep',
 		'ts:test',
+		'ts:testEs6',
 		'run'
 	]);
 

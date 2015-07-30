@@ -16,6 +16,7 @@ const bomOptExp = /^\uFEFF?/;
 
 const externalExp = /^([ \t]*declare module )(['"])(.+?)(\2[ \t]*{?.*)$/;
 const importExp = /^([ \t]*(?:export )?(?:import .+? )= require\()(['"])(.+?)(\2\);.*)$/;
+const importEs6Exp = /^([ \t]*(?:export|import) ?(?:(?:\* (?:as [^ ,]+)?)|.*)?,? ?(?:[^ ,]+ ?,?)(?:\{(?:[^ ,]+ ?,?)*\})? ?from )(['"])([^ ,]+)(\2;.*)$/;
 const referenceTagExp = /^[ \t]*\/\/\/[ \t]*<reference[ \t]+path=(["'])(.*?)\1?[ \t]*\/>.*$/;
 const identifierExp = /^\w+(?:[\.-]\w+)*$/;
 const fileExp = /^([\./].*|.:.*)$/;
@@ -236,7 +237,11 @@ export function bundle(options: Options) {
         });
 
         parse.importLineRef.forEach((line, i) => {
-            line.modified = replaceImportExport(line.original, getLibName);
+            if (importExp.test(line.original)) {
+                line.modified = replaceImportExport(line.original, getLibName);
+            } else {
+                line.modified = replaceImportExportEs6(line.original, getLibName);
+            }
             trace(' - %s  ==>  %s', line.original, line.modified);
         });
     });
@@ -507,8 +512,8 @@ export function bundle(options: Options) {
             }
             popJSDoc();
 
-            // import() statement
-            if ((match = line.match(importExp))) {
+            // import() statement or es6 import
+            if ((match = line.match(importExp) || line.match(importEs6Exp))) {
                 const [_, lead, quote, moduleName, trail] = match;
                 assert(moduleName);
 
@@ -544,6 +549,7 @@ export function bundle(options: Options) {
                     }
                 }
             }
+
             // declaring an external module
             // this triggers when we're e.g. parsing external module declarations, such as node.d.ts
             else if ((match = line.match(externalExp))) {
@@ -605,6 +611,17 @@ function extractReference(tag: string) {
 
 function replaceImportExport(line: string, replacer: (str: string) => string) {
     let match = line.match(importExp);
+    if (match) {
+        assert(match[4]);
+        if (identifierExp.test(match[3])) {
+            return match[1] + match[2] + replacer(match[3]) + match[4];
+        }
+    }
+    return line;
+}
+
+function replaceImportExportEs6(line: string, replacer: (str: string) => string) {
+    let match = line.match(importEs6Exp);
     if (match) {
         assert(match[4]);
         if (identifierExp.test(match[3])) {

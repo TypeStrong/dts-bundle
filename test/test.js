@@ -223,4 +223,52 @@ describe('dts bundle', function () {
 		]);
 		assert.strictEqual(getFile(actualFile), getFile(expectedFile));
 	});
+
+	(function testit(name, assertion, run) {
+		var buildDir = path.resolve(__dirname, 'build', 'es6');
+		var call = function (done) {
+			var testDir = path.join(tmpDir, name);
+			var expDir = path.join(expectDir, name);
+
+			mkdirp.sync(testDir);
+
+			ncp.ncp(buildDir, testDir, function (err) {
+				if (err) {
+					done(err);
+					return;
+				}
+				assertion(testDir, expDir);
+				done();
+			});
+		};
+
+		var label = 'bundle ' + name;
+
+		if (run === 'skip') {
+			it.skip(label, call);
+		}
+		else if (run === 'only') {
+			it.only(label, call);
+		}
+		else {
+			it(label, call);
+		}
+	})('es6', function (actDir, expDir) {
+		dts.bundle({
+			name: 'foo-mx',
+			main: path.join(actDir, '../es6', 'index.d.ts')
+		});
+		var name = 'foo-mx.d.ts';
+		var actualFile = path.join(actDir, name);
+		var expectedFile = path.join(expDir, name);
+		assertFiles(actDir, [
+			name,
+			'index.d.ts',
+			'lib/subC.d.ts',
+			'lib/subD.d.ts',
+			'lib/subE.d.ts',
+			'sub.d.ts'
+		]);
+		assert.strictEqual(getFile(actualFile), getFile(expectedFile));
+	});
 });

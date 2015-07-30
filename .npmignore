@@ -3,6 +3,8 @@
 /util
 
 /Gruntfile.js
+/debug.js
+/dtsm.json
 
 .npmignore
 .gitignore

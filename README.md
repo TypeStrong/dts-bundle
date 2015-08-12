@@ -1,6 +1,6 @@
 # dts-bundle
 
-[![Build Status](https://secure.travis-ci.org/grunt-ts/dts-bundle.svg?branch=master)](http://travis-ci.org/grunt-ts/dts-bundle) [![NPM version](https://badge.fury.io/js/dts-bundle.svg)](http://badge.fury.io/js/dts-bundle) [![Dependency Status](https://david-dm.org/grunt-ts/dts-bundle.svg)](https://david-dm.org/grunt-ts/dts-bundle) [![devDependency Status](https://david-dm.org/grunt-ts/dts-bundle/dev-status.svg)](https://david-dm.org/grunt-ts/dts-bundle#info=devDependencies)
+[![Build Status](https://travis-ci.org/TypeStrong/dts-bundle.svg)](https://travis-ci.org/TypeStrong/dts-bundle) [![NPM version](https://badge.fury.io/js/dts-bundle.svg)](http://badge.fury.io/js/dts-bundle) [![Dependency Status](https://david-dm.org/TypeStrong/dts-bundle.svg)](https://david-dm.org/TypeStrong/dts-bundle) [![devDependency Status](https://david-dm.org/TypeStrong/dts-bundle/dev-status.svg)](https://david-dm.org/TypeStrong/dts-bundle#info=devDependencies)
 
 > Export TypeScript .d.ts files as an external module definition
 
@@ -81,21 +81,21 @@ var opts = {
 
 	// name of module likein package.json
 	// - used to declare module & import/require
-	name: 'cool-project', 
+	name: 'cool-project',
 	// path to entry-point (generated .d.ts file for main module)
-	// - either relative or absolute 
-	main: 'build/index.d.ts', 
+	// - either relative or absolute
+	main: 'build/index.d.ts',
 
 	// Optional
 
-	// base directory to be used for discovering type declarations (i.e. from this project itself) 
+	// base directory to be used for discovering type declarations (i.e. from this project itself)
 	// - default: dirname of main
 	baseDir: 'build',
 	// path of output file
-	// - default: "<baseDir>/<name>.d.ts" 
+	// - default: "<baseDir>/<name>.d.ts"
 	out: 'dist/cool-project.d.ts',
 	// include typings outside of the 'baseDir' (i.e. like node.d.ts)
-	// - default: false 
+	// - default: false
 	externals: false,
 	// filter to exclude typings, either a RegExp or a callback. match path relative to opts.baseDir
 	// - RegExp: a match excludes the file
@@ -106,20 +106,20 @@ var opts = {
   	// delete all source typings (i.e. "<baseDir>/**/*.d.ts")
 	// - default: false
 	removeSource: false,
-	// newline to use in output file 
+	// newline to use in output file
 	newline: os.EOL,
 	// indentation to use in output file
 	// - default 4 spaces
-	indent: '	', 
+	indent: '	',
 	// prefix for rewriting module names
 	// - default '__'
-	prefix: '__', 
+	prefix: '__',
 	// separator for rewriting module 'path' names
 	// - default: forward slash (like sub-modules)
-	separator: '/', 
+	separator: '/',
 	// enable verbose mode, prints detailed info about all references and includes/excludes
 	// - default: false
-	verbose: false, 
+	verbose: false,
 };
 
 // require module

@@ -140,6 +140,7 @@ dts.bundle(opts);
 
 # History
 
+- 0.3.x - Support es6 module syntax & rewrite by TypeScript
 - 0.2.x - Fixed bugs & added many options (thanks @poelstra)
 - 0.1.x - First release
 

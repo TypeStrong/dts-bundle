@@ -74,6 +74,7 @@ export function bundle(options: Options) {
     const externals = optValue(options.externals, false);
     const exclude = optValue(options.exclude, null);
     const removeSource = optValue(options.removeSource, false);
+    const referenceExternals = optValue(options.referenceExternals, false);
 
     // regular (non-jsdoc) comments are not actually supported by declaration compiler
     const comments = false;
@@ -253,7 +254,12 @@ export function bundle(options: Options) {
     if (externalDependencies.length > 0) {
         content += '// Dependencies for this module:' + newline;
         externalDependencies.forEach(file => {
-            content += '//   ' + path.relative(baseDir, file).replace(/\\/g, '/') + newline;
+            if (referenceExternals) {
+                content += formatReference(path.relative(baseDir, file).replace(/\\/g, '/')) + newline;
+            }
+            else {
+                content += '//   ' + path.relative(baseDir, file).replace(/\\/g, '/') + newline;
+            }
         });
     }
 

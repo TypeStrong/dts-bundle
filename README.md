@@ -97,6 +97,9 @@ var opts = {
 	// include typings outside of the 'baseDir' (i.e. like node.d.ts)
 	// - default: false
 	externals: false,
+	// reference external modules as <reference path="..." /> tags
+	// - default: false
+	referenceExternals: false,
 	// filter to exclude typings, either a RegExp or a callback. match path relative to opts.baseDir
 	// - RegExp: a match excludes the file
 	// - function: (file:String, external:Boolean) return true to exclude, false to allow

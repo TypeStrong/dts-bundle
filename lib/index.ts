@@ -36,6 +36,7 @@ export interface Options {
     exclude?: { (file: string): boolean; } | RegExp;
     removeSource?: boolean;
     verbose?: boolean;
+    referenceExternals?: boolean;
 }
 
 export interface ModLine {

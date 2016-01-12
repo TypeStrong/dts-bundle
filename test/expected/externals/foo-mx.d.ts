@@ -39,6 +39,8 @@ declare module '__foo-mx/Foo' {
                 * Bars the foo.
                 */
             barFoo(): void;
+            /** Foos the baz. */
+            fooBaz(): void;
     }
     export = Foo;
 }

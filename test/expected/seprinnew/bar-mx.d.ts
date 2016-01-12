@@ -29,6 +29,8 @@ declare module '--bar-mx#Foo' { //$
 				* Bars the foo. //$
 				*/ //$
 			barFoo(): void; //$
+			/** Foos the baz. */ //$
+			fooBaz(): void; //$
 	} //$
 	export = Foo; //$
 } //$

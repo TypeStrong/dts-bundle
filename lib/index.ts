@@ -462,6 +462,11 @@ export function bundle(options: Options) {
             if (/^[ \t]*\/\*/.test(line)) {
                 multiComment.push(line);
                 inBlockComment = true;
+								
+ 				// single line block comment
+                if (/\*+\/[ \t]*$/.test(line)) {
+ 					popBlock();
+ 				}
                 return;
             }
 

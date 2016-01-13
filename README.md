@@ -91,7 +91,7 @@ var opts = {
 	// base directory to be used for discovering type declarations (i.e. from this project itself)
 	// - default: dirname of main
 	baseDir: 'build',
-	// path of output file
+	// path of output file. Is relative from baseDir. See https://github.com/TypeStrong/dts-bundle/issues/26
 	// - default: "<baseDir>/<name>.d.ts"
 	out: 'dist/cool-project.d.ts',
 	// include typings outside of the 'baseDir' (i.e. like node.d.ts)

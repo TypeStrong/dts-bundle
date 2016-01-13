@@ -65,7 +65,7 @@ export function bundle(options: Options) {
     const main = options.main;
     const exportName = options.name;
     const _baseDir = optValue(options.baseDir, path.dirname(options.main));
-    const out = optValue(options.out, exportName + '.d.ts');
+    const out = optValue(options.out, exportName + '.d.ts').replace(/\//g, path.sep);
 
     const newline = optValue(options.newline, os.EOL);
     const indent = optValue(options.indent, '    ');
@@ -93,7 +93,7 @@ export function bundle(options: Options) {
     // turn relative paths into absolute paths
     const baseDir = path.resolve(_baseDir);
     const mainFile = path.resolve(main.replace(/\//g, path.sep));
-    const outFile = path.resolve(baseDir, out.replace(/\//g, path.sep));
+    const outFile = calcOutFilePath(out, baseDir);
 
     trace('### settings ###');
     trace('main:         %s', main);
@@ -203,7 +203,7 @@ export function bundle(options: Options) {
                     trace(' - exclude external %s', name);
                     pushUnique(externalDependencies, !p ? name : p.file);
                     return;
-                }                
+                }
                 if (isExclude(path.relative(baseDir, p.file), true)) {
                     trace(' - exclude external filter %s', name);
                     pushUnique(excludedTypings, p.file);
@@ -359,6 +359,23 @@ export function bundle(options: Options) {
     trace('\n### done ###\n');
     return;
 
+    function stringStartsWith(string: string, prefix: string) {
+        return string.slice(0, prefix.length) == prefix;
+    }
+
+    // Calculate out file path (see #26 https://github.com/TypeStrong/dts-bundle/issues/26)
+    function calcOutFilePath(out: any, baseDir: any) {
+        var result = path.resolve(baseDir, out);
+        // if path is absolute and start with "/" and not is a net route ("//") resolve from local
+        if (path.isAbsolute(out) 
+            && stringStartsWith(out, path.sep) 
+            && !stringStartsWith(out, `${path.sep + path.sep}`)) {
+                
+            result = path.resolve(".", out.substr(1));
+        }    
+        return result;
+    }
+
     function trace(...args: any[]) {
         if (verbose) {
             console.log(util.format.apply(null, args));
@@ -470,10 +487,10 @@ export function bundle(options: Options) {
                 multiComment.push(line);
                 inBlockComment = true;
 								
- 				// single line block comment
+                // single line block comment
                 if (/\*+\/[ \t]*$/.test(line)) {
- 					popBlock();
- 				}
+                    popBlock();
+                }
                 return;
             }
 

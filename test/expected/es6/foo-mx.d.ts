@@ -60,3 +60,4 @@ declare module '__foo-mx/lib/subE' {
     export function foo(): A;
     export function bar(): A;
 }
+

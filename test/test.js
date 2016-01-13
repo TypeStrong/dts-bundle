@@ -256,7 +256,8 @@ describe('dts bundle', function () {
 	})('es6', function (actDir, expDir) {
 		dts.bundle({
 			name: 'foo-mx',
-			main: path.join(actDir, '../es6', 'index.d.ts')
+			main: path.join(actDir, '../es6', 'index.d.ts'),
+            newline: '\n'
 		});
 		var name = 'foo-mx.d.ts';
 		var actualFile = path.join(actDir, name);

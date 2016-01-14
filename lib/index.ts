@@ -95,6 +95,9 @@ export function bundle(options: Options) {
     const mainFile = path.resolve(main.replace(/\//g, path.sep));
     const outFile = calcOutFilePath(out, baseDir);
 
+    trace('### settings object passed ###');
+    traceObject(options);
+
     trace('### settings ###');
     trace('main:         %s', main);
     trace('name:         %s', exportName);
@@ -369,6 +372,12 @@ export function bundle(options: Options) {
         return result;
     }
 
+    function traceObject(obj : any) {
+        if (verbose){
+            console.log(obj);
+        }        
+    }
+    
     function trace(...args: any[]) {
         if (verbose) {
             console.log(util.format.apply(null, args));

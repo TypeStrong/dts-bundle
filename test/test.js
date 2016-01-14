@@ -71,7 +71,8 @@ describe('dts bundle', function () {
 		dts.bundle({
 			name: 'foo-mx',
 			main: path.join(actDir, 'index.d.ts'),
-			newline: '\n'
+			newline: '\n',
+            verbose: true
 		});
 		var name = 'foo-mx.d.ts';
 		var actualFile = path.join(actDir, name);
@@ -91,7 +92,8 @@ describe('dts bundle', function () {
 			name: 'foo-mx',
 			main: path.join(actDir, 'index.d.ts'),
 			removeSource: true,
-			newline: '\n'
+			newline: '\n',
+            verbose: true
 		});
 		var name = 'foo-mx.d.ts';
 		var actualFile = path.join(actDir, name);
@@ -131,7 +133,8 @@ describe('dts bundle', function () {
 			prefix: '--',
 			separator: '#',
 			indent: '\t',
-			newline: ' //$\n'
+			newline: ' //$\n',
+            verbose: true
 		});
 		var name = 'bar-mx.d.ts';
 		var actualFile = path.join(actDir, name);
@@ -147,7 +150,8 @@ describe('dts bundle', function () {
 			name: 'foo-mx',
 			main: path.join(actDir, 'index.d.ts'),
 			externals: true,
-			newline: '\n'
+			newline: '\n',
+            verbose: true
 		});
 		var name = 'foo-mx.d.ts';
 		var actualFile = path.join(actDir, name);
@@ -167,7 +171,8 @@ describe('dts bundle', function () {
 			name: 'foo-mx',
 			main: path.join(actDir, 'index.d.ts'),
 			exclude: /exported\-sub/,
-			newline: '\n'
+			newline: '\n',
+            verbose: true
 		});
 		var name = 'foo-mx.d.ts';
 		var actualFile = path.join(actDir, name);
@@ -189,7 +194,8 @@ describe('dts bundle', function () {
 			exclude: function(file) {
 				return /exported\-sub/.test(file);
 			},
-			newline: '\n'
+			newline: '\n',
+            verbose: true
 		});
 		var name = 'foo-mx.d.ts';
 		var actualFile = path.join(actDir, name);
@@ -210,7 +216,8 @@ describe('dts bundle', function () {
 			main: path.join(actDir, 'index.d.ts'),
 			externals: true,
 			exclude: /exported\-sub/,
-			newline: '\n'
+			newline: '\n',
+            verbose: true
 		});
 		var name = 'foo-mx.d.ts';
 		var actualFile = path.join(actDir, name);
@@ -258,7 +265,8 @@ describe('dts bundle', function () {
 		dts.bundle({
 			name: 'foo-mx',
 			main: path.join(actDir, '../es6', 'index.d.ts'),
-            newline: '\n'
+            newline: '\n',
+            verbose: true
 		});
 		var name = 'foo-mx.d.ts';
 		var actualFile = path.join(actDir, name);

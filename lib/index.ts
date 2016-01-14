@@ -122,6 +122,8 @@ export function bundle(options: Options): BundleResult {
     trace('exclude:      %s', exclude);
     trace('removeSource: %s', removeSource ? 'yes' : 'no');
     trace('comments:     %s', comments ? 'yes' : 'no');
+    trace('emitOnIncludedFileNotFound:   %s', emitOnIncludedFileNotFound ? "yes" : "no");
+    trace('emitOnNoIncludedFileNotFound: %s', emitOnNoIncludedFileNotFound ? "yes" : "no");
 
     assert(fs.existsSync(mainFile), 'main does not exist: ' + mainFile);
 

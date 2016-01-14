@@ -83,7 +83,8 @@ var opts = {
 	// - used to declare module & import/require
 	name: 'cool-project',
 	// path to entry-point (generated .d.ts file for main module)
-    // if you want to load all .d.ts files from a path recursively you can use "path/project/**/*.d.ts" *** Experimental, TEST NEEDED, see "All .d.ts files" section
+    // if you want to load all .d.ts files from a path recursively you can use "path/project/**/*.d.ts"
+    //  ^ *** Experimental, TEST NEEDED, see "All .d.ts files" section 
 	// - either relative or absolute
 	main: 'build/index.d.ts',
 
@@ -92,7 +93,9 @@ var opts = {
 	// base directory to be used for discovering type declarations (i.e. from this project itself)
 	// - default: dirname of main
 	baseDir: 'build',
-	// path of output file. Is relative from baseDir but you can use absolute paths. If start with "~/" then is relative to current path. See https://github.com/TypeStrong/dts-bundle/issues/26
+	// path of output file. Is relative from baseDir but you can use absolute paths. 
+    // if starts with "~/" then is relative to current path. See https://github.com/TypeStrong/dts-bundle/issues/26
+    //  ^ *** Experimental, TEST NEEDED    
 	// - default: "<baseDir>/<name>.d.ts"
 	out: 'dist/cool-project.d.ts',
 	// include typings outside of the 'baseDir' (i.e. like node.d.ts)
@@ -124,10 +127,12 @@ var opts = {
 	// enable verbose mode, prints detailed info about all references and includes/excludes
 	// - default: false
 	verbose: false,
-    // emit although included files not found. See "Files not found" section. *** Experimental, TEST NEEDED
+    // emit although included files not found. See "Files not found" section. 
+    // *** Experimental, TEST NEEDED
     // - default: false 
     emitOnIncludedFileNotFound: false,
-    // emit although no included files not found. See "Files not found" section. *** Experimental, TEST NEEDED
+    // emit although no included files not found. See "Files not found" section. 
+    // *** Experimental, TEST NEEDED
     // - default: false     
     emitOnNoIncludedFileNotFound: false
 };

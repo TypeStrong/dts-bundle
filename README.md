@@ -188,6 +188,8 @@ typings in your temporally output compile path.
 
 ## Return value
 
+Experimental - Test needed -
+
 `bundle` function return an object that implement this interface:
 
 ```` typescript

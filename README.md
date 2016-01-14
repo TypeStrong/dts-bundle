@@ -141,7 +141,7 @@ dts.bundle(opts);
 
 ### All `.d.ts` files
 
-Experimental - Test needed -
+Experimental - Test needed - https://github.com/TypeStrong/dts-bundle/issues/29
 
 You can bundle the definitions from for all files contained on a directory, and children directories.
 If you set `name` parameter to some path ended with `**/*.d.ts` then `dts-bundle` load all .d.ts files and generate a bundle.

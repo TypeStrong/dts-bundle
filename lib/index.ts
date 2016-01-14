@@ -56,6 +56,7 @@ export interface Result {
     lines: ModLine[];
     importLineRef: ModLine[];
     relativeRef: ModLine[];
+    fileExists: boolean;
 }
 
 export function bundle(options: Options) {
@@ -353,7 +354,13 @@ export function bundle(options: Options) {
         trace('external dependencies');
         externalDependencies.forEach(p => {
             trace(' - %s', p);
-        });
+        });                
+        trace('files not found');
+        for (let p in fileMap){
+            let parse = fileMap[p];
+            if (!parse.fileExists)
+                trace(' X %s', parse.file);            
+        }
     }
 
     trace('\n### done ###\n');
@@ -419,23 +426,30 @@ export function bundle(options: Options) {
 
         trace('%s (%s)', name, file);
 
-        const code = fs.readFileSync(file, 'utf8').replace(bomOptExp, '').replace(/\s*$/, '');
-
         const res: Result = {
             file: file,
             name: name,
-            indent: detectIndent(code) || indent,
+            indent: indent,
             exp: getExpName(file),
             refs: [], // triple-slash references
             externalImports: [], // import()'s like "events"
             relativeImports: [], // import()'s like "./foo"
             exports: [],
             lines: [],
+            fileExists: true,
             // the next two properties contain single-element arrays, which reference the same single-element in .lines,
             // in order to be able to replace their contents later in the bundling process.
             importLineRef: [],
-            relativeRef: []
+            relativeRef: []            
         };
+        
+        if (!fs.existsSync(file)) {
+            trace(' X - File not found: %s', file);
+            res.fileExists = false;
+            return res;
+        }        
+        const code = fs.readFileSync(file, 'utf8').replace(bomOptExp, '').replace(/\s*$/, '');
+        res.indent = detectIndent(code) || indent;
 
         // buffer multi-line comments, handle JSDoc
         let multiComment: string[] = [];

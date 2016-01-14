@@ -123,6 +123,12 @@ var opts = {
 	// enable verbose mode, prints detailed info about all references and includes/excludes
 	// - default: false
 	verbose: false,
+    // emit although included files not found. See "Files not found" section.
+    // - default: false 
+    emitOnIncludedFileNotFound: false;
+    // emit although no included files not found. See "Files not found" section.
+    // - default: false     
+    emitOnNoIncludedFileNotFound: false;
 };
 
 // require module
@@ -132,6 +138,39 @@ var dts = require('dts-bundle');
 dts.bundle(opts);
 ````
 
+### Files not found.
+`dts-bundle` expects to find all references for all modules. Goes over all files referenced and tries to load each file to get the definitions, 
+when he loads all files `dts-bundle` determines if include each one in the final bundle. If some file is not found dts-bundle doesn't emit the 
+result file. You could want to emit the result file although some file are not found. The file not found can be an included or exclued file in 
+the bundle then you have two options to control these cases:
+
+* `emitOnIncludedFileNotFound`. When there are files not found and these file should be included in the bundle, 
+`dts-bundle` writes the output file if `emitOnIncludedFileNotFound` is true. This allow you to have external file 
+definitions that you will load by other way in your final project.
+* `emitOnNoIncludedFileNotFound`. When there are files not found and these file shouldn't be included in the bundle, 
+`dts-bundle` writes the output file if `emitOnNoIncludedFileNotFound` is true. This allow you don't to include external 
+typings in your temporally output compile path.
+
+## Return value
+
+`bundle` function return an object that implement this interface:
+
+```` typescript
+export interface BundleResult {
+    // a map with parse result per each process module.
+    fileMap: { [moduleName: string]: Result; },
+    // list of files not found that should be included in the bundle.
+    includeFilesNotFound: string[];
+    // list of files not found that shouldn`t be no included in the bundle.
+    noIncludeFilesNotFound: string[];
+    // true if dts-bunlde wrote the result, false otherwise.
+    emited?: boolean;
+    // original options passed to the function. 
+    options: Options;
+}
+````
+
+You can use the return value to determine if continue your gulp or grunt task or stop and emit an error.
 
 ## Todo
 

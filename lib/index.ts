@@ -37,6 +37,8 @@ export interface Options {
     removeSource?: boolean;
     verbose?: boolean;
     referenceExternals?: boolean;
+    emitOnIncludedFileNotFound?: boolean;
+    emitOnNoIncludedFileNotFound?: boolean;
 }
 
 export interface ModLine {
@@ -59,7 +61,15 @@ export interface Result {
     fileExists: boolean;
 }
 
-export function bundle(options: Options) {
+export interface BundleResult {
+    fileMap: { [name: string]: Result; },
+    includeFilesNotFound: string[];
+    noIncludeFilesNotFound: string[];
+    emited?: boolean;
+    options: Options;
+}
+
+export function bundle(options: Options): BundleResult {
     assert(typeof options === 'object' && options, 'options must be an object');
 
     // option parsing & validation
@@ -77,6 +87,8 @@ export function bundle(options: Options) {
     const exclude = optValue(options.exclude, null);
     const removeSource = optValue(options.removeSource, false);
     const referenceExternals = optValue(options.referenceExternals, false);
+    const emitOnIncludedFileNotFound = optValue(options.emitOnIncludedFileNotFound, false);
+    const emitOnNoIncludedFileNotFound = optValue(options.emitOnNoIncludedFileNotFound, false);
 
     // regular (non-jsdoc) comments are not actually supported by declaration compiler
     const comments = false;
@@ -300,23 +312,55 @@ export function bundle(options: Options) {
         });
     }
 
-    // write main file
-    trace('\n### write output ###');
-    trace(outFile);
-
-    {
-        let outDir = path.dirname(outFile);
-        if (!fs.existsSync(outDir)) {
-            mkdirp.sync(outDir);
-        }
-    }
-
-    fs.writeFileSync(outFile, content, 'utf8');
-
     let inUsed = (file: string): boolean => {
         return usedTypings.filter(parse => parse.file === file).length !== 0;
     };
-        
+
+    let bundleResult: BundleResult = {
+        fileMap,
+        includeFilesNotFound: [],
+        noIncludeFilesNotFound: [],
+        options
+    };
+
+    trace('## files not found ##');
+    for (let p in fileMap) {
+        let parse = fileMap[p];
+        if (!parse.fileExists) {
+            if (inUsed(parse.file)) {
+                bundleResult.includeFilesNotFound.push(parse.file);
+                warning(' X Included file NOT FOUND %s ', parse.file)
+            } else {
+                bundleResult.noIncludeFilesNotFound.push(parse.file);
+                trace(' X Not used file not found %s', parse.file);
+            }
+        }
+    }
+
+    // write main file
+    trace('\n### write output ###');
+    // write only if there aren't not found files or there are and option "emit file not found" is true.
+    if ((bundleResult.includeFilesNotFound.length == 0
+        || (bundleResult.includeFilesNotFound.length > 0 && emitOnIncludedFileNotFound))
+        && (bundleResult.noIncludeFilesNotFound.length == 0
+            || (bundleResult.noIncludeFilesNotFound.length > 0 && emitOnNoIncludedFileNotFound))) {
+
+        trace(outFile);
+        {
+            let outDir = path.dirname(outFile);
+            if (!fs.existsSync(outDir)) {
+                mkdirp.sync(outDir);
+            }
+        }
+
+        fs.writeFileSync(outFile, content, 'utf8');
+        bundleResult.emited = true;
+    } else {
+        warning(" XXX Not emit due to exist files not found.")
+        trace("See documentation for emitOnIncludedFileNotFound and emitOnNoIncludedFileNotFound options.")
+        bundleResult.emited = false;
+    }
+
     // print some debug info
     if (verbose) {
         trace('\n### statistics ###');
@@ -360,22 +404,10 @@ export function bundle(options: Options) {
         });
     }
 
-    trace('files not found');
-    for (let p in fileMap) {
-        let parse = fileMap[p];
-        if (!parse.fileExists) {
-            if (inUsed(parse.file)) {
-                warning(' X Included file NOT FOUND %s ', parse.file)
-            } else {
-                trace(' X Not used file not found %s', parse.file);
-            }
-        }
-    }
-
     trace('\n### done ###\n');
-    return;
+    return bundleResult;
 
-    function stringStartsWith(str: string, prefix:string) {
+    function stringStartsWith(str: string, prefix: string) {
         return str.slice(0, prefix.length) == prefix;
     }
 

@@ -107,7 +107,8 @@ describe('dts bundle', function () {
 			name: 'foo-mx',
 			main: path.join(actDir, 'index.d.ts'),
 			out: path.join(actDir, 'fizz', 'buzz.d.ts'),
-			newline: '\n'
+			newline: '\n',
+            verbose: true
 		});
 		var name = path.join('fizz', 'buzz.d.ts');
 		var actualFile = path.join(actDir, name);

@@ -83,6 +83,7 @@ var opts = {
 	// - used to declare module & import/require
 	name: 'cool-project',
 	// path to entry-point (generated .d.ts file for main module)
+    // if you want to load all .d.ts files from a path recursively you can use "path/project/**/*.d.ts" *** Experimental, TEST NEEDED, see "All .d.ts files" section
 	// - either relative or absolute
 	main: 'build/index.d.ts',
 
@@ -97,7 +98,7 @@ var opts = {
 	// include typings outside of the 'baseDir' (i.e. like node.d.ts)
 	// - default: false
 	externals: false,
-	// reference external modules as <reference path="..." /> tags
+	// reference external modules as <reference path="..." /> tags *** Experimental, TEST NEEDED
 	// - default: false
 	referenceExternals: false,
 	// filter to exclude typings, either a RegExp or a callback. match path relative to opts.baseDir
@@ -123,10 +124,10 @@ var opts = {
 	// enable verbose mode, prints detailed info about all references and includes/excludes
 	// - default: false
 	verbose: false,
-    // emit although included files not found. See "Files not found" section.
+    // emit although included files not found. See "Files not found" section. *** Experimental, TEST NEEDED
     // - default: false 
     emitOnIncludedFileNotFound: false,
-    // emit although no included files not found. See "Files not found" section.
+    // emit although no included files not found. See "Files not found" section. *** Experimental, TEST NEEDED
     // - default: false     
     emitOnNoIncludedFileNotFound: false
 };
@@ -138,7 +139,41 @@ var dts = require('dts-bundle');
 dts.bundle(opts);
 ````
 
+### All `.d.ts` files
+
+Experimental - Test needed -
+
+You can bundle the definitions from for all files contained on a directory, and children directories.
+If you set `name` parameter to some path ended with `**/*.d.ts` then `dts-bundle` load all .d.ts files and generate a bundle.
+Internally `dts-bundle` builds a temporally file with export of the rest of the files. You can see it on verbose mode: i.e:
+
+```` typescript
+// ## temporally main file ##
+export * from './Core/Bootstrap';
+export * from './Core/ChangeDetection';
+export * from './Core/ControllerDecorator';
+export * from './Core/LifeCycle\LifeCycleHooks';
+export * from './Decorators/Component';
+export * from './Decorators/Input';
+export * from './Decorators/Output';
+export * from './Directives/ngPropertyBinding';
+export * from './Events/EventEmitter';
+export * from './Expressions/ExpressionParser';
+export * from './Expressions/Ng1Lexer\Lexer';
+export * from './Ng2Emulation';
+export * from './Templates/HtmlParser\Parser';
+export * from './Templates/HtmlParser\ParserRule';
+export * from './Templates/HtmlParser\Rules\EventBindingRule';
+export * from './Templates/HtmlParser\Rules\TwoWayBindingRule';
+export * from './Utils/AngularHelpers';
+````
+
+Then `dts-bundle` processes this file. When finish the temporally file is deleted.
+
 ### Files not found.
+
+Experimental - Test needed -
+
 `dts-bundle` expects to find all references for all modules. Goes over all files referenced and tries to load each file to get the definitions, 
 when he loads all files `dts-bundle` determines if include each one in the final bundle. If some file is not found dts-bundle doesn't emit the 
 result file. You could want to emit the result file although some file are not found. The file not found can be an included or exclued file in 

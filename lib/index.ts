@@ -313,12 +313,12 @@ export function bundle(options: Options) {
 
     fs.writeFileSync(outFile, content, 'utf8');
 
+    let inUsed = (file: string): boolean => {
+        return usedTypings.filter(parse => parse.file === file).length !== 0;
+    };
+        
     // print some debug info
     if (verbose) {
-        let inUsed = (file: string): boolean => {
-            return usedTypings.filter(parse => parse.file === file).length !== 0;
-        };
-
         trace('\n### statistics ###');
 
         trace('used sourceTypings');
@@ -357,38 +357,52 @@ export function bundle(options: Options) {
         trace('external dependencies');
         externalDependencies.forEach(p => {
             trace(' - %s', p);
-        });                
-        trace('files not found');
-        for (let p in fileMap){
-            let parse = fileMap[p];
-            if (!parse.fileExists)
-                trace(' X %s', parse.file);            
+        });
+    }
+
+    trace('files not found');
+    for (let p in fileMap) {
+        let parse = fileMap[p];
+        if (!parse.fileExists) {
+            if (inUsed(parse.file)) {
+                warning(' X Included file NOT FOUND %s ', parse.file)
+            } else {
+                trace(' X Not used file not found %s', parse.file);
+            }
         }
     }
 
     trace('\n### done ###\n');
     return;
 
+    function stringStartsWith(str: string, prefix:string) {
+        return str.slice(0, prefix.length) == prefix;
+    }
+
     // Calculate out file path (see #26 https://github.com/TypeStrong/dts-bundle/issues/26)
     function calcOutFilePath(out: any, baseDir: any) {
         var result = path.resolve(baseDir, out);
         // if path start with ~, out parameter is relative from current dir
-        if (out[0] === "~") {
-            result = path.resolve(".", out.substr(1));
+        if (stringStartsWith(out, "~" + path.sep)) {
+            result = path.resolve(".", out.substr(2));
         }
         return result;
     }
 
-    function traceObject(obj : any) {
-        if (verbose){
+    function traceObject(obj: any) {
+        if (verbose) {
             console.log(obj);
-        }        
+        }
     }
-    
+
     function trace(...args: any[]) {
         if (verbose) {
             console.log(util.format.apply(null, args));
         }
+    }
+
+    function warning(...args: any[]) {
+        console.log(util.format.apply(null, args));
     }
 
     function getModName(file: string) {
@@ -442,14 +456,14 @@ export function bundle(options: Options) {
             // the next two properties contain single-element arrays, which reference the same single-element in .lines,
             // in order to be able to replace their contents later in the bundling process.
             importLineRef: [],
-            relativeRef: []            
+            relativeRef: []
         };
-        
+
         if (!fs.existsSync(file)) {
             trace(' X - File not found: %s', file);
             res.fileExists = false;
             return res;
-        }        
+        }
         const code = fs.readFileSync(file, 'utf8').replace(bomOptExp, '').replace(/\s*$/, '');
         res.indent = detectIndent(code) || indent;
 

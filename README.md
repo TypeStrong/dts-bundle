@@ -125,10 +125,10 @@ var opts = {
 	verbose: false,
     // emit although included files not found. See "Files not found" section.
     // - default: false 
-    emitOnIncludedFileNotFound: false;
+    emitOnIncludedFileNotFound: false,
     // emit although no included files not found. See "Files not found" section.
     // - default: false     
-    emitOnNoIncludedFileNotFound: false;
+    emitOnNoIncludedFileNotFound: false
 };
 
 // require module
@@ -158,7 +158,7 @@ typings in your temporally output compile path.
 ```` typescript
 export interface BundleResult {
     // a map with parse result per each process module.
-    fileMap: { [moduleName: string]: Result; },
+    fileMap: { [moduleName: string]: Result; };
     // list of files not found that should be included in the bundle.
     includeFilesNotFound: string[];
     // list of files not found that shouldn`t be no included in the bundle.

@@ -62,7 +62,7 @@ export interface Result {
 }
 
 export interface BundleResult {
-    fileMap: { [name: string]: Result; },
+    fileMap: { [name: string]: Result; };
     includeFilesNotFound: string[];
     noIncludeFilesNotFound: string[];
     emited?: boolean;

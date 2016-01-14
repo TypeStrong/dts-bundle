@@ -359,20 +359,13 @@ export function bundle(options: Options) {
     trace('\n### done ###\n');
     return;
 
-    function stringStartsWith(string: string, prefix: string) {
-        return string.slice(0, prefix.length) == prefix;
-    }
-
     // Calculate out file path (see #26 https://github.com/TypeStrong/dts-bundle/issues/26)
     function calcOutFilePath(out: any, baseDir: any) {
         var result = path.resolve(baseDir, out);
-        // if path is absolute and start with "/" and not is a net route ("//") resolve from local
-        if (path.isAbsolute(out) 
-            && stringStartsWith(out, path.sep) 
-            && !stringStartsWith(out, `${path.sep + path.sep}`)) {
-                
+        // if path start with ~, out parameter is relative from current dir
+        if (out[0] === "~") {
             result = path.resolve(".", out.substr(1));
-        }    
+        }
         return result;
     }
 

@@ -72,10 +72,19 @@ export interface BundleResult {
 export function bundle(options: Options): BundleResult {
     assert(typeof options === 'object' && options, 'options must be an object');
 
+    // if main ends with **/*.d.ts all .d.ts files will be loaded
+    const allFiles = stringEndsWith(options.main, "**/*.d.ts");
+
     // option parsing & validation
-    const main = options.main;
+    const main = allFiles ? "*.d.ts" : options.main;
     const exportName = options.name;
-    const _baseDir = optValue(options.baseDir, path.dirname(options.main));
+    const _baseDir = (() => {
+        let baseDir = optValue(options.baseDir, path.dirname(options.main));
+        if (allFiles) {
+            baseDir = baseDir.substr(0, baseDir.length - 2);
+        }
+        return baseDir;
+    })();
     const out = optValue(options.out, exportName + '.d.ts').replace(/\//g, path.sep);
 
     const newline = optValue(options.newline, os.EOL);
@@ -105,7 +114,7 @@ export function bundle(options: Options): BundleResult {
 
     // turn relative paths into absolute paths
     const baseDir = path.resolve(_baseDir);
-    const mainFile = path.resolve(main.replace(/\//g, path.sep));
+    let mainFile = allFiles ? path.resolve(baseDir, "**/*.d.ts") : path.resolve(main.replace(/\//g, path.sep));
     const outFile = calcOutFilePath(out, baseDir);
 
     trace('### settings object passed ###');
@@ -125,7 +134,9 @@ export function bundle(options: Options): BundleResult {
     trace('emitOnIncludedFileNotFound:   %s', emitOnIncludedFileNotFound ? "yes" : "no");
     trace('emitOnNoIncludedFileNotFound: %s', emitOnNoIncludedFileNotFound ? "yes" : "no");
 
-    assert(fs.existsSync(mainFile), 'main does not exist: ' + mainFile);
+    if (!allFiles) {
+        assert(fs.existsSync(mainFile), 'main does not exist: ' + mainFile);
+    }
 
     let isExclude: (file: string, arg?: boolean) => boolean;
     if (typeof exclude === 'function') {
@@ -138,9 +149,23 @@ export function bundle(options: Options): BundleResult {
         isExclude = () => false;
     }
 
+    const sourceTypings = glob.sync('**/*.d.ts', { cwd: baseDir }).map(file => path.resolve(baseDir, file));
+
+    // if all files, generate temporally main file
+    if (allFiles) {
+        let mainFileContent = "";
+        trace("## temporally main file ##");
+        sourceTypings.forEach(file => {
+            let generatedLine = "export * from './" + path.relative(baseDir, file.substr(0, file.length - 5)).replace(path.sep, "/") + "';";
+            trace(generatedLine);
+            mainFileContent += generatedLine + "\n";
+        });
+        mainFile = path.resolve(baseDir, "dts-bundle.tmp." + exportName + ".d.ts");
+        fs.writeFileSync(mainFile, mainFileContent, 'utf8');
+    }
+
     trace('\n### find typings ###');
 
-    const sourceTypings = glob.sync('**/*.d.ts', { cwd: baseDir }).map(file => path.resolve(baseDir, file));
     const inSourceTypings = (file: string) => sourceTypings.indexOf(file) !== -1;
 
     trace('source typings (will be included in output if actually used)');
@@ -407,7 +432,15 @@ export function bundle(options: Options): BundleResult {
     }
 
     trace('\n### done ###\n');
+    // remove temporally file.
+    if (allFiles) {
+        fs.unlinkSync(mainFile);
+    }
     return bundleResult;
+
+    function stringEndsWith(str: string, suffix: string) {
+        return str.indexOf(suffix, str.length - suffix.length) !== -1;
+    }
 
     function stringStartsWith(str: string, prefix: string) {
         return str.slice(0, prefix.length) == prefix;

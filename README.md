@@ -119,7 +119,7 @@ var opts = {
 	// - default 4 spaces
 	indent: '	',
 	// prefix for rewriting module names
-	// - default '__'
+	// - default ''
 	prefix: '__',
 	// separator for rewriting module 'path' names
 	// - default: forward slash (like sub-modules)

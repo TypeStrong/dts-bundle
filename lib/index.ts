@@ -89,7 +89,7 @@ export function bundle(options: Options): BundleResult {
 
     const newline = optValue(options.newline, os.EOL);
     const indent = optValue(options.indent, '    ');
-    const prefix = optValue(options.prefix, '__');
+    const prefix = optValue(options.prefix, '');
     const separator = optValue(options.separator, '/');
 
     const externals = optValue(options.externals, false);

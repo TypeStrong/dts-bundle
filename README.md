@@ -32,7 +32,7 @@ Something like:
 tsc src/index.ts --declaration --module commonjs --target es5 --outDir build
 ````
 
-3) Run `dts-bundle`
+3) Run `dts-bundle` (you can run it from cli, see "Command line" section.
 
 Let's assume the project is called `cool-project` and the main module is `build/index.js` with a `build/index.d.ts`:
 
@@ -213,6 +213,65 @@ export interface BundleResult {
 ````
 
 You can use the return value to determine if continue your gulp or grunt task or stop and emit an error.
+
+# Command line
+
+Experimental - Test needed -
+
+You can use `dts-bundle` from command line, its allow you use it from npm scripts [ see #13 ](https://github.com/TypeStrong/dts-bundle/issues/13).
+You have to install it using -g:
+
+````
+npm install dts-bundle -g
+````
+
+You can use the following options:
+
+````
+Usage: dts-bundle [options]
+
+Options:
+
+  -h, --help                      output usage information
+  -V, --version                   output the version number
+  --configJson <value>            path to json config file. Load it first and override options with additional parameters
+  --name <value>                  name of module likein package.json *required
+  --main <value>                  path to entry-point (see documentation) *required
+  --baseDir [value]               base directory to be used for discovering type declarations
+  --out [value]                   path of output file. Is relative from baseDir but you can use absolute paths.
+  --externals                     include typings outside of the "baseDir" (i.e. like node.d.ts)
+  --referenceExternals            reference external modules as <reference path="..." /> tags *** Experimental, TEST NEEDED
+  --removeSource                  delete all source typings (i.e. "<baseDir>/**/*.d.ts")
+  --newline [style]               newline style to use in output file => unix|windows|currentOsDefault
+  --prefix [value]                prefix for rewriting module names
+  --separator [value]             separator for rewriting module "path" names
+  --verbose                       enable verbose mode, prints detailed info about all references and includes/excludes
+  --emitOnIncludedFileNotFound    emit although included files not found. See readme "Files not found" section.
+  --emitOnNoIncludedFileNotFound  emit although no included files not found. See readme "Files not found" section.
+````
+
+For example: 
+````
+dts-bundle --name cool-project --main build/output/index.d.ts
+````
+You can load config from a json file:
+```` json
+// dts-bundle.json file
+{
+    "name": "cool-project",
+    "main": "tmp/out/index.d.ts"
+}
+````
+Run this way:
+````
+dts-bundle --configJson dts-bundle.json
+````
+And can override properties:
+````
+dts-bundle --configJson dts-bundle.json --name coolest
+````
+Emitting `tmp/out/cooles.d.ts`.
+
 
 ## Todo
 

@@ -40,7 +40,7 @@
   "dependencies": {
     "commander": "^2.9.0",
     "detect-indent": "^0.2.0",
-    "glob": "^4.0.2",
+    "glob": "^6.0.4",
     "mkdirp": "^0.5.0"
   },
   "devDependencies": {

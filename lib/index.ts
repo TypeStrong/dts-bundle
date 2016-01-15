@@ -65,7 +65,7 @@ export interface BundleResult {
     fileMap: { [name: string]: Result; };
     includeFilesNotFound: string[];
     noIncludeFilesNotFound: string[];
-    emited?: boolean;
+    emitted?: boolean;
     options: Options;
 }
 
@@ -381,11 +381,11 @@ export function bundle(options: Options): BundleResult {
         }
 
         fs.writeFileSync(outFile, content, 'utf8');
-        bundleResult.emited = true;
+        bundleResult.emitted = true;
     } else {
         warning(" XXX Not emit due to exist files not found.")
         trace("See documentation for emitOnIncludedFileNotFound and emitOnNoIncludedFileNotFound options.")
-        bundleResult.emited = false;
+        bundleResult.emitted = false;
     }
 
     // print some debug info

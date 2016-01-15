@@ -206,7 +206,7 @@ export interface BundleResult {
     // list of files not found that shouldn`t be no included in the bundle.
     noIncludeFilesNotFound: string[];
     // true if dts-bunlde wrote the result, false otherwise.
-    emited?: boolean;
+    emitted?: boolean;
     // original options passed to the function. 
     options: Options;
 }

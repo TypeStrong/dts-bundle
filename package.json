@@ -9,6 +9,9 @@
     "export",
     "d.ts"
   ],
+  "bin": {
+    "dts-bundle": "./lib/dts-bundle.js"
+  },
   "homepage": "https://github.com/grunt-ts/dts-bundle",
   "repository": {
     "type": "git",
@@ -35,6 +38,7 @@
   },
   "main": "./index.js",
   "dependencies": {
+    "commander": "^2.9.0",
     "detect-indent": "^0.2.0",
     "glob": "^4.0.2",
     "mkdirp": "^0.5.0"

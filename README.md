@@ -285,7 +285,7 @@ Emitting `tmp/out/cooles.d.ts`.
   * Support not found file (`emitOnIncludedFileNotFound` and `emitOnNoIncludedFileNotFound`)
   * Output relative to current path using "~/"
   * referenceExternals option
-  * All files feature using **/*.d.ts on `main` option
+  * All files feature using `**/*.d.ts` on `main` option
   * Return a object with the result
 * 0.3.x - Support es6 module syntax & rewrite by TypeScript
 * 0.2.x - Fixed bugs & added many options (thanks @poelstra)

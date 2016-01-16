@@ -93,7 +93,7 @@ describe('dts bundle', function () {
 
 	testit('default_cli', function (actDir, expDir) {
         expDir = expDir.substr(0, expDir.length - 4); // expDir is the same without "_cli" suffix        
-        execSync(util.format("dts-bundle --name foo-mx --main %s --newline unix --verbose", path.join(actDir, 'index.d.ts')));
+        execSync(util.format("node ./lib/dts-bundle.js --name foo-mx --main %s --newline unix --verbose", path.join(actDir, 'index.d.ts')));
 		var name = 'foo-mx.d.ts';
 		var actualFile = path.join(actDir, name);
 		var expectedFile = path.join(expDir, name);
@@ -127,7 +127,7 @@ describe('dts bundle', function () {
 
 	testit('remove_cli', function (actDir, expDir) {
         expDir = expDir.substr(0, expDir.length - 4); // expDir is the same without "_cli" suffix        
-        execSync(util.format("dts-bundle --name foo-mx --main %s --removeSource --newline unix --verbose", path.join(actDir, 'index.d.ts')));
+        execSync(util.format("node ./lib/dts-bundle --name foo-mx --main %s --removeSource --newline unix --verbose", path.join(actDir, 'index.d.ts')));
 		var name = 'foo-mx.d.ts';
 		var actualFile = path.join(actDir, name);
 		var expectedFile = path.join(expDir, name);
@@ -161,7 +161,7 @@ describe('dts bundle', function () {
 
 	testit('out_cli', function (actDir, expDir) {
         expDir = expDir.substr(0, expDir.length - 4); // expDir is the same without "_cli" suffix        
-        execSync(util.format("dts-bundle --name foo-mx --main %s --out %s --newline unix --verbose", 
+        execSync(util.format("node ./lib/dts-bundle --name foo-mx --main %s --out %s --newline unix --verbose", 
             path.join(actDir, 'index.d.ts'), 
             path.join(actDir, 'fizz', 'buzz.d.ts')));
 		var name = path.join('fizz', 'buzz.d.ts');
@@ -198,7 +198,19 @@ describe('dts bundle', function () {
 		assert.strictEqual(getFile(actualFile), getFile(expectedFile));
 	});
 
-	//testit('seprinnew_cli', function (actDir, expDir) {	}); // No preffix and this kind of newline available from CLI. Perhaps using .json file.
+	testit('seprinnew_cli', function (actDir, expDir) {	
+        expDir = expDir.substr(0, expDir.length - 4); // expDir is the same without "_cli" suffix        
+        execSync(util.format("node ./lib/dts-bundle --configJson ./test/seprinnew_cli-config.json --name bar-mx --main %s --removeSource --separator # --verbose", 
+            path.join(actDir, 'index.d.ts'), 
+            path.join(actDir, 'fizz', 'buzz.d.ts')));
+		var name = 'bar-mx.d.ts';
+		var actualFile = path.join(actDir, name);        
+		var expectedFile = path.join(expDir, name);
+		assertFiles(actDir, [
+			name
+		]);
+		assert.strictEqual(getFile(actualFile), getFile(expectedFile));
+    });
 
 	testit('externals', function (actDir, expDir) {
 		var result = dts.bundle({
@@ -224,7 +236,7 @@ describe('dts bundle', function () {
 
 	testit('externals_cli', function (actDir, expDir) {
         expDir = expDir.substr(0, expDir.length - 4); // expDir is the same without "_cli" suffix        
-        execSync(util.format("dts-bundle --name foo-mx --main %s --externals --newline unix --verbose", 
+        execSync(util.format("node ./lib/dts-bundle --name foo-mx --main %s --externals --newline unix --verbose", 
             path.join(actDir, 'index.d.ts')));
 		var name = 'foo-mx.d.ts';
 		var actualFile = path.join(actDir, name);
@@ -261,7 +273,7 @@ describe('dts bundle', function () {
 		assert.strictEqual(getFile(actualFile), getFile(expectedFile));
 	});
 
-	//testit('excludeExp_cli', function (actDir, expDir) {	}); // No exclude options available from CLI. Perhaps using .json file.
+	//testit('excludeExp_cli', function (actDir, expDir) {	}); // No exclude options available from CLI.
 
 	testit('excludeFunc', function (actDir, expDir) {
 		var result = dts.bundle({
@@ -287,7 +299,7 @@ describe('dts bundle', function () {
 		assert.strictEqual(getFile(actualFile), getFile(expectedFile));
 	});
     
-   	//testit('excludeFunc_cli', function (actDir, expDir) {  }); // No exclude options available from CLI. Perhaps using .json file.
+   	//testit('excludeFunc_cli', function (actDir, expDir) {  }); // No exclude options available from CLI.
 
 	testit('includeExclude', function (actDir, expDir) {
 		var result = dts.bundle({
@@ -312,7 +324,7 @@ describe('dts bundle', function () {
 		assert.strictEqual(getFile(actualFile), getFile(expectedFile));
 	});
     
-  	//testit('includeExclude_cli', function (actDir, expDir) {  }); // No exclude options available from CLI. Perhaps using .json file.
+  	//testit('includeExclude_cli', function (actDir, expDir) {  }); // No exclude options available from CLI.
 
 
 	(function testit(name, assertion, run) {
@@ -397,7 +409,7 @@ describe('dts bundle', function () {
 		}
 	})('es6_cli', function (actDir, expDir) {
         expDir = expDir.substr(0, expDir.length - 4); // expDir is the same without "_cli" suffix        
-        execSync(util.format("dts-bundle --name foo-mx --main %s --newline unix --verbose", 
+        execSync(util.format("node ./lib/dts-bundle --name foo-mx --main %s --newline unix --verbose", 
             path.join(actDir, '../es6_cli', 'index.d.ts')));
 		var name = 'foo-mx.d.ts';
 		var actualFile = path.join(actDir, name);

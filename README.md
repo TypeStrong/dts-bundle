@@ -216,8 +216,6 @@ You can use the return value to determine if continue your gulp or grunt task or
 
 # Command line
 
-Experimental - Test needed -
-
 You can use `dts-bundle` from command line, its allow you use it from npm scripts [ see #13 ](https://github.com/TypeStrong/dts-bundle/issues/13).
 You have to install it using -g:
 
@@ -240,11 +238,10 @@ Options:
   --baseDir [value]               base directory to be used for discovering type declarations
   --out [value]                   path of output file. Is relative from baseDir but you can use absolute paths.
   --externals                     include typings outside of the "baseDir" (i.e. like node.d.ts)
-  --referenceExternals            reference external modules as <reference path="..." /> tags *** Experimental, TEST NEEDED
+  --referenceExternals            reference external modules as <reference path="..." /> tags
   --removeSource                  delete all source typings (i.e. "<baseDir>/**/*.d.ts")
   --newline [style]               newline style to use in output file => unix|windows|currentOsDefault
   --prefix [value]                prefix for rewriting module names
-  --separator [value]             separator for rewriting module "path" names
   --verbose                       enable verbose mode, prints detailed info about all references and includes/excludes
   --emitOnIncludedFileNotFound    emit although included files not found. See readme "Files not found" section.
   --emitOnNoIncludedFileNotFound  emit although no included files not found. See readme "Files not found" section.

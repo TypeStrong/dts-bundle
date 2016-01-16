@@ -200,7 +200,7 @@ describe('dts bundle', function () {
 
 	testit('seprinnew_cli', function (actDir, expDir) {	
         expDir = expDir.substr(0, expDir.length - 4); // expDir is the same without "_cli" suffix        
-        execSync(util.format("node ./lib/dts-bundle --configJson ./test/seprinnew_cli-config.json --name bar-mx --main %s --removeSource --separator # --verbose", 
+        execSync(util.format("node ./lib/dts-bundle --configJson ./test/seprinnew_cli-config.json --name bar-mx --main %s --removeSource --verbose", 
             path.join(actDir, 'index.d.ts'), 
             path.join(actDir, 'fizz', 'buzz.d.ts')));
 		var name = 'bar-mx.d.ts';

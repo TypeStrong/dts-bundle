@@ -639,7 +639,8 @@ export function bundle(options: Options): BundleResult {
             popJSDoc();
 
             // import() statement or es6 import
-            if ((match = line.match(importExp) || line.match(importEs6Exp))) {
+            if ((line.indexOf("from") >= 0 && (match = line.match(importEs6Exp))) ||
+                (line.indexOf("require") >= 0 && (match = line.match(importExp)))) {
                 const [_, lead, quote, moduleName, trail] = match;
                 assert(moduleName);
 
@@ -747,6 +748,9 @@ function replaceImportExport(line: string, replacer: (str: string) => string) {
 }
 
 function replaceImportExportEs6(line: string, replacer: (str: string) => string) {
+    if (line.indexOf("from") < 0) {
+        return line;
+    }
     let match = line.match(importEs6Exp);
     if (match) {
         assert(match[4]);

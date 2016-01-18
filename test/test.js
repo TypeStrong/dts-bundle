@@ -75,7 +75,8 @@ describe('dts bundle', function () {
 			name: 'foo-mx',
 			main: path.join(actDir, 'index.d.ts'),
 			newline: '\n',
-            verbose: true
+            verbose: true,
+            headerPath: "none"
 		});
 		var name = 'foo-mx.d.ts';
 		var actualFile = path.join(actDir, name);
@@ -93,7 +94,7 @@ describe('dts bundle', function () {
 
 	testit('default_cli', function (actDir, expDir) {
         expDir = expDir.substr(0, expDir.length - 4); // expDir is the same without "_cli" suffix        
-        execSync(util.format("node ./lib/dts-bundle.js --name foo-mx --main %s --newline unix --verbose", path.join(actDir, 'index.d.ts')));
+        execSync(util.format("node ./lib/dts-bundle.js --name foo-mx --main %s --newline unix --verbose --headerPath none", path.join(actDir, 'index.d.ts')));
 		var name = 'foo-mx.d.ts';
 		var actualFile = path.join(actDir, name);
 		var expectedFile = path.join(expDir, name);
@@ -113,7 +114,8 @@ describe('dts bundle', function () {
 			main: path.join(actDir, 'index.d.ts'),
 			removeSource: true,
 			newline: '\n',
-            verbose: true
+            verbose: true,
+            headerPath: "none"
 		});
 		var name = 'foo-mx.d.ts';
 		var actualFile = path.join(actDir, name);
@@ -127,7 +129,7 @@ describe('dts bundle', function () {
 
 	testit('remove_cli', function (actDir, expDir) {
         expDir = expDir.substr(0, expDir.length - 4); // expDir is the same without "_cli" suffix        
-        execSync(util.format("node ./lib/dts-bundle --name foo-mx --main %s --removeSource --newline unix --verbose", path.join(actDir, 'index.d.ts')));
+        execSync(util.format("node ./lib/dts-bundle --name foo-mx --main %s --removeSource --newline unix --verbose --headerPath none", path.join(actDir, 'index.d.ts')));
 		var name = 'foo-mx.d.ts';
 		var actualFile = path.join(actDir, name);
 		var expectedFile = path.join(expDir, name);
@@ -143,7 +145,8 @@ describe('dts bundle', function () {
 			main: path.join(actDir, 'index.d.ts'),
 			out: path.join(actDir, 'fizz', 'buzz.d.ts'),
 			newline: '\n',
-            verbose: true
+            verbose: true,
+            headerPath: "none"
 		});
 		var name = path.join('fizz', 'buzz.d.ts');
 		var actualFile = path.join(actDir, name);
@@ -161,7 +164,7 @@ describe('dts bundle', function () {
 
 	testit('out_cli', function (actDir, expDir) {
         expDir = expDir.substr(0, expDir.length - 4); // expDir is the same without "_cli" suffix        
-        execSync(util.format("node ./lib/dts-bundle --name foo-mx --main %s --out %s --newline unix --verbose", 
+        execSync(util.format("node ./lib/dts-bundle --name foo-mx --main %s --out %s --newline unix --verbose --headerPath none", 
             path.join(actDir, 'index.d.ts'), 
             path.join(actDir, 'fizz', 'buzz.d.ts')));
 		var name = path.join('fizz', 'buzz.d.ts');
@@ -186,7 +189,8 @@ describe('dts bundle', function () {
 			separator: '#',
 			indent: '\t',
 			newline: ' //$\n',
-            verbose: true
+            verbose: true,
+            headerPath: "none"
 		});
 		var name = 'bar-mx.d.ts';
 		var actualFile = path.join(actDir, name);
@@ -200,7 +204,7 @@ describe('dts bundle', function () {
 
 	testit('seprinnew_cli', function (actDir, expDir) {	
         expDir = expDir.substr(0, expDir.length - 4); // expDir is the same without "_cli" suffix        
-        execSync(util.format("node ./lib/dts-bundle --configJson ./test/seprinnew_cli-config.json --name bar-mx --main %s --removeSource --verbose", 
+        execSync(util.format("node ./lib/dts-bundle --configJson ./test/seprinnew_cli-config.json --name bar-mx --main %s --removeSource --verbose --headerPath none", 
             path.join(actDir, 'index.d.ts'), 
             path.join(actDir, 'fizz', 'buzz.d.ts')));
 		var name = 'bar-mx.d.ts';
@@ -218,7 +222,8 @@ describe('dts bundle', function () {
 			main: path.join(actDir, 'index.d.ts'),
 			externals: true,
 			newline: '\n',
-            verbose: true
+            verbose: true,
+            headerPath: "none"
 		});
 		var name = 'foo-mx.d.ts';
 		var actualFile = path.join(actDir, name);
@@ -236,7 +241,7 @@ describe('dts bundle', function () {
 
 	testit('externals_cli', function (actDir, expDir) {
         expDir = expDir.substr(0, expDir.length - 4); // expDir is the same without "_cli" suffix        
-        execSync(util.format("node ./lib/dts-bundle --name foo-mx --main %s --externals --newline unix --verbose", 
+        execSync(util.format("node ./lib/dts-bundle --name foo-mx --main %s --externals --newline unix --verbose --headerPath none", 
             path.join(actDir, 'index.d.ts')));
 		var name = 'foo-mx.d.ts';
 		var actualFile = path.join(actDir, name);
@@ -257,7 +262,8 @@ describe('dts bundle', function () {
 			main: path.join(actDir, 'index.d.ts'),
 			exclude: /exported\-sub/,
 			newline: '\n',
-            verbose: true
+            verbose: true,
+            headerPath: "none"
 		});
 		var name = 'foo-mx.d.ts';
 		var actualFile = path.join(actDir, name);
@@ -283,7 +289,8 @@ describe('dts bundle', function () {
 				return /exported\-sub/.test(file);
 			},
 			newline: '\n',
-            verbose: true
+            verbose: true,
+            headerPath: "none"
 		});
 		var name = 'foo-mx.d.ts';
 		var actualFile = path.join(actDir, name);
@@ -308,7 +315,8 @@ describe('dts bundle', function () {
 			externals: true,
 			exclude: /exported\-sub/,
 			newline: '\n',
-            verbose: true
+            verbose: true,
+            headerPath: "none"
 		});
 		var name = 'foo-mx.d.ts';
 		var actualFile = path.join(actDir, name);
@@ -361,7 +369,8 @@ describe('dts bundle', function () {
 			name: 'foo-mx',
 			main: path.join(actDir, '../es6', 'index.d.ts'),
             newline: '\n',
-            verbose: true
+            verbose: true,
+            headerPath: "none"
 		});
 		var name = 'foo-mx.d.ts';
 		var actualFile = path.join(actDir, name);
@@ -409,7 +418,7 @@ describe('dts bundle', function () {
 		}
 	})('es6_cli', function (actDir, expDir) {
         expDir = expDir.substr(0, expDir.length - 4); // expDir is the same without "_cli" suffix        
-        execSync(util.format("node ./lib/dts-bundle --name foo-mx --main %s --newline unix --verbose", 
+        execSync(util.format("node ./lib/dts-bundle --name foo-mx --main %s --newline unix --verbose --headerPath none", 
             path.join(actDir, '../es6_cli', 'index.d.ts')));
 		var name = 'foo-mx.d.ts';
 		var actualFile = path.join(actDir, name);

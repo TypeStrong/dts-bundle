@@ -134,7 +134,11 @@ var opts = {
     // emit although no included files not found. See "Files not found" section. 
     // *** Experimental, TEST NEEDED
     // - default: false     
-    emitOnNoIncludedFileNotFound: false
+    emitOnNoIncludedFileNotFound: false,    
+    // path to file that contains the header
+    // // insert a header in output file. i.e.: http://definitelytyped.org/guides/contributing.html#header
+    // - default: null
+    headerPath: "path/to/header/file"     
 };
 
 // require module
@@ -245,6 +249,7 @@ Options:
   --verbose                       enable verbose mode, prints detailed info about all references and includes/excludes
   --emitOnIncludedFileNotFound    emit although included files not found. See readme "Files not found" section.
   --emitOnNoIncludedFileNotFound  emit although no included files not found. See readme "Files not found" section.
+  --headerPath [value]            path to file that contains the header
 ````
 
 For example: 
@@ -287,6 +292,7 @@ Emitting `tmp/out/cooles.d.ts`.
   * referenceExternals option
   * All files feature using `**/*.d.ts` on `main` option
   * Return a object with the result
+  * Add Header using `headerPath` 
 * 0.3.x - Support es6 module syntax & rewrite by TypeScript
 * 0.2.x - Fixed bugs & added many options (thanks @poelstra)
 * 0.1.x - First release

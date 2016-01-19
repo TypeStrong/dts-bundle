@@ -299,7 +299,7 @@ Emitting `tmp/out/cooles.d.ts`.
 
 ## Key People
 
-* [tolemac](http://github.com/tolemac) : current lead
+* [Javier Ros (tolemaC)](http://github.com/tolemac) : current lead
 * [Bart van der Schoor](https://github.com/Bartvds) : original creator
 
 ## Contributions

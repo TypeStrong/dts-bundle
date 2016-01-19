@@ -297,6 +297,10 @@ Emitting `tmp/out/cooles.d.ts`.
 * 0.2.x - Fixed bugs & added many options (thanks @poelstra)
 * 0.1.x - First release
 
+## Key People
+
+* [tolemac](http://github.com/tolemac) : current lead
+* [Bart van der Schoor](https://github.com/Bartvds) : original creator
 
 ## Contributions
 
@@ -304,9 +308,6 @@ They are very welcome. Beware this module is a quick hack-job so good luck!
 
 * Martin Poelstra (@poelstra): Exclude 'external' typings, optional debug output, improved configurability.
 
-
 ## License
-
-Copyright (c) 2014 [Bart van der Schoor](https://github.com/Bartvds)
 
 Licensed under the MIT license.

@@ -170,7 +170,7 @@ export function bundle(options: Options): BundleResult {
         let mainFileContent = "";
         trace("## temporally main file ##");
         sourceTypings.forEach(file => {
-            let generatedLine = "export * from './" + path.relative(baseDir, file.substr(0, file.length - 5)).replace(path.sep, "/") + "';";
+            let generatedLine = "export * from './" + path.relative(baseDir, file.substr(0, file.length - 5)).replace(/\\/g, "/") + "';";
             trace(generatedLine);
             mainFileContent += generatedLine + "\n";
         });

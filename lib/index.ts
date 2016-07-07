@@ -30,6 +30,7 @@ export interface Options {
     out?: string;
     newline?: string;
     indent?: string;
+    outputAsModuleFolder?: boolean;
     prefix?: string;
     separator?: string;
     externals?: boolean;
@@ -45,6 +46,7 @@ export interface Options {
 export interface ModLine {
     original: string;
     modified?: string;
+    skip?: boolean;
 }
 
 export interface Result {
@@ -90,6 +92,7 @@ export function bundle(options: Options): BundleResult {
 
     const newline = optValue(options.newline, os.EOL);
     const indent = optValue(options.indent, '    ');
+    const outputAsModuleFolder = optValue(options.outputAsModuleFolder, false);
     const prefix = optValue(options.prefix, '');
     const separator = optValue(options.separator, '/');
 
@@ -296,6 +299,12 @@ export function bundle(options: Options): BundleResult {
         });
 
         parse.importLineRef.forEach((line, i) => {
+            if (outputAsModuleFolder) {
+                trace(' - %s was skipped.', line.original);
+                line.skip = true;
+                return;
+            }
+
             if (importExp.test(line.original)) {
                 line.modified = replaceImportExport(line.original, getLibName);
             } else {
@@ -327,7 +336,15 @@ export function bundle(options: Options): BundleResult {
     // content += lb;
 
     // add wrapped modules to output
-    content += usedTypings.map(parse => {
+    content += usedTypings.filter((parse: Result) => {
+        // Eliminate all the skipped lines
+        parse.lines = parse.lines.filter((line: ModLine) => {
+            return (true !== line.skip);
+        });
+
+        // filters empty parse objects.
+        return ( parse.lines.length > 0 );
+    }).map((parse: Result) => {
         if (inSourceTypings(parse.file)) {
             return formatModule(parse.file, parse.lines.map(line => {
                 return getIndenter(parse.indent, indent)(line);
@@ -509,10 +526,19 @@ export function bundle(options: Options): BundleResult {
         return name.replace(/\.\./g, '--').replace(/[\\\/]/g, separator);
     }
 
+    function mergeModulesLines(lines) {
+        var i = (outputAsModuleFolder ? '' : indent);
+        return (lines.length === 0 ? '' : i + lines.join(newline + i)) + newline;
+    }
+
     function formatModule(file: string, lines: string[]) {
         let out = '';
+        if (outputAsModuleFolder) {
+            return mergeModulesLines(lines);
+        }
+
         out += 'declare module \'' + getExpName(file) + '\' {' + newline;
-        out += (lines.length === 0 ? '' : indent + lines.join(newline + indent)) + newline;
+        out += mergeModulesLines(lines);
         out += '}' + newline;
         return out;
     }

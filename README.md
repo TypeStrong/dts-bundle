@@ -135,6 +135,8 @@ var opts = {
     // *** Experimental, TEST NEEDED
     // - default: false     
     emitOnNoIncludedFileNotFound: false,    
+    // output d.ts as designed for module folder. (no declare modules)
+    outputAsModuleFolder: false,
     // path to file that contains the header
     // // insert a header in output file. i.e.: http://definitelytyped.org/guides/contributing.html#header
     // - default: null
@@ -178,6 +180,16 @@ export * from './Utils/AngularHelpers';
 ````
 
 Then `dts-bundle` processes this file. When finish the temporally file is deleted.
+
+### Module folders
+NPM introduced support for in-package typings,
+it is done by adding typings key into package.json file, which should refer to the
+typings file.
+when this is the case, the d.ts file is threated as module folder, and declare module
+is not allowed.
+
+* `outputAsModuleFolder`. When using this option output d.ts will be compatible with module folder. which means, no declare module are used,
+and all internal references are removed as they are merged into the output d.ts.
 
 ### Files not found.
 
@@ -249,6 +261,7 @@ Options:
   --verbose                       enable verbose mode, prints detailed info about all references and includes/excludes
   --emitOnIncludedFileNotFound    emit although included files not found. See readme "Files not found" section.
   --emitOnNoIncludedFileNotFound  emit although no included files not found. See readme "Files not found" section.
+  --outputAsModuleFolder          output as module folder format (no declare module) . See readme "Module folders" section.
   --headerPath [value]            path to file that contains the header
 ````
 

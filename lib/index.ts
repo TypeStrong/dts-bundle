@@ -192,6 +192,7 @@ export function bundle(options: Options): BundleResult {
     trace('excluded typings (will always be excluded from output)');
 
     let fileMap: { [name: string]: Result; } = Object.create(null);
+    let globalExternalImports: string[] = [];
     let mainParse: Result; // will be parsed result of first parsed file
     let externalTypings: string[] = [];
     let inExternalTypings = (file: string) => externalTypings.indexOf(file) !== -1;
@@ -328,6 +329,11 @@ export function bundle(options: Options): BundleResult {
                 content += '//   ' + path.relative(baseDir, file).replace(/\\/g, '/') + newline;
             }
         });
+    }
+
+    if ( globalExternalImports.length > 0 ) {
+        content += newline;
+        content += globalExternalImports.join(newline) + newline;
     }
 
     content += newline;
@@ -707,12 +713,16 @@ export function bundle(options: Options): BundleResult {
                     let modLine: ModLine = {
                         original: line
                     };
-                    res.lines.push(modLine);
                     trace(' - import external %s', moduleName);
 
                     pushUnique(res.externalImports, moduleName);
                     if (externals) {
                         res.importLineRef.push(modLine);
+                    }
+                    if (!outputAsModuleFolder) {
+                        res.lines.push(modLine);
+                    } else {
+                        pushUnique(globalExternalImports, line);
                     }
                 }
             }

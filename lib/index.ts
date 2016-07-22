@@ -144,6 +144,9 @@ export function bundle(options: Options): BundleResult {
 
     if (!allFiles) {
         assert(fs.existsSync(mainFile), 'main does not exist: ' + mainFile);
+        if (fs.lstatSync(mainFile).isDirectory()) {
+            mainFile = path.join(mainFile, 'index.d.ts');
+        }
     }
 
     if (headerPath) {
@@ -702,7 +705,12 @@ export function bundle(options: Options): BundleResult {
                     };
                     res.lines.push(modLine);
 
-                    const full = path.resolve(path.dirname(file), impPath + '.d.ts');
+                    let full = path.resolve(path.dirname(file), impPath);
+                    if(fs.existsSync(full) && fs.lstatSync(full).isDirectory()) {
+                      full = path.join(full, 'index.d.ts');
+                    } else {
+                      full = path.resolve(path.dirname(file), impPath + '.d.ts');
+                    }
                     trace(' - import relative %s (%s)', moduleName, full);
 
                     pushUnique(res.relativeImports, full);

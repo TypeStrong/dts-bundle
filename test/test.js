@@ -93,7 +93,7 @@ describe('dts bundle', function () {
 	});
 
 	testit('default_cli', function (actDir, expDir) {
-        expDir = expDir.substr(0, expDir.length - 4); // expDir is the same without "_cli" suffix        
+        expDir = expDir.substr(0, expDir.length - 4); // expDir is the same without "_cli" suffix
         execSync(util.format("node ./lib/dts-bundle.js --name foo-mx --main %s --newline unix --verbose --headerPath none", path.join(actDir, 'index.d.ts')));
 		var name = 'foo-mx.d.ts';
 		var actualFile = path.join(actDir, name);
@@ -128,7 +128,7 @@ describe('dts bundle', function () {
 	});
 
 	testit('remove_cli', function (actDir, expDir) {
-        expDir = expDir.substr(0, expDir.length - 4); // expDir is the same without "_cli" suffix        
+        expDir = expDir.substr(0, expDir.length - 4); // expDir is the same without "_cli" suffix
         execSync(util.format("node ./lib/dts-bundle --name foo-mx --main %s --removeSource --newline unix --verbose --headerPath none", path.join(actDir, 'index.d.ts')));
 		var name = 'foo-mx.d.ts';
 		var actualFile = path.join(actDir, name);
@@ -163,9 +163,9 @@ describe('dts bundle', function () {
 	});
 
 	testit('out_cli', function (actDir, expDir) {
-        expDir = expDir.substr(0, expDir.length - 4); // expDir is the same without "_cli" suffix        
-        execSync(util.format("node ./lib/dts-bundle --name foo-mx --main %s --out %s --newline unix --verbose --headerPath none", 
-            path.join(actDir, 'index.d.ts'), 
+        expDir = expDir.substr(0, expDir.length - 4); // expDir is the same without "_cli" suffix
+        execSync(util.format("node ./lib/dts-bundle --name foo-mx --main %s --out %s --newline unix --verbose --headerPath none",
+            path.join(actDir, 'index.d.ts'),
             path.join(actDir, 'fizz', 'buzz.d.ts')));
 		var name = path.join('fizz', 'buzz.d.ts');
 		var actualFile = path.join(actDir, name);
@@ -202,13 +202,13 @@ describe('dts bundle', function () {
 		assert.strictEqual(getFile(actualFile), getFile(expectedFile));
 	});
 
-	testit('seprinnew_cli', function (actDir, expDir) {	
-        expDir = expDir.substr(0, expDir.length - 4); // expDir is the same without "_cli" suffix        
-        execSync(util.format("node ./lib/dts-bundle --configJson ./test/seprinnew_cli-config.json --name bar-mx --main %s --removeSource --verbose --headerPath none", 
-            path.join(actDir, 'index.d.ts'), 
+	testit('seprinnew_cli', function (actDir, expDir) {
+        expDir = expDir.substr(0, expDir.length - 4); // expDir is the same without "_cli" suffix
+        execSync(util.format("node ./lib/dts-bundle --configJson ./test/seprinnew_cli-config.json --name bar-mx --main %s --removeSource --verbose --headerPath none",
+            path.join(actDir, 'index.d.ts'),
             path.join(actDir, 'fizz', 'buzz.d.ts')));
 		var name = 'bar-mx.d.ts';
-		var actualFile = path.join(actDir, name);        
+		var actualFile = path.join(actDir, name);
 		var expectedFile = path.join(expDir, name);
 		assertFiles(actDir, [
 			name
@@ -240,8 +240,8 @@ describe('dts bundle', function () {
 	});
 
 	testit('externals_cli', function (actDir, expDir) {
-        expDir = expDir.substr(0, expDir.length - 4); // expDir is the same without "_cli" suffix        
-        execSync(util.format("node ./lib/dts-bundle --name foo-mx --main %s --externals --newline unix --verbose --headerPath none", 
+        expDir = expDir.substr(0, expDir.length - 4); // expDir is the same without "_cli" suffix
+        execSync(util.format("node ./lib/dts-bundle --name foo-mx --main %s --externals --newline unix --verbose --headerPath none",
             path.join(actDir, 'index.d.ts')));
 		var name = 'foo-mx.d.ts';
 		var actualFile = path.join(actDir, name);
@@ -305,7 +305,7 @@ describe('dts bundle', function () {
 		]);
 		assert.strictEqual(getFile(actualFile), getFile(expectedFile));
 	});
-    
+
    	//testit('excludeFunc_cli', function (actDir, expDir) {  }); // No exclude options available from CLI.
 
 	testit('includeExclude', function (actDir, expDir) {
@@ -331,7 +331,7 @@ describe('dts bundle', function () {
 		]);
 		assert.strictEqual(getFile(actualFile), getFile(expectedFile));
 	});
-    
+
   	//testit('includeExclude_cli', function (actDir, expDir) {  }); // No exclude options available from CLI.
 
 
@@ -386,7 +386,7 @@ describe('dts bundle', function () {
 		]);
 		assert.strictEqual(getFile(actualFile), getFile(expectedFile));
 	});
-    
+
 	(function testit(name, assertion, run) {
 		var buildDir = path.resolve(__dirname, 'build', 'es6');
 		var call = function (done) {
@@ -417,8 +417,8 @@ describe('dts bundle', function () {
 			it(label, call);
 		}
 	})('es6_cli', function (actDir, expDir) {
-        expDir = expDir.substr(0, expDir.length - 4); // expDir is the same without "_cli" suffix        
-        execSync(util.format("node ./lib/dts-bundle --name foo-mx --main %s --newline unix --verbose --headerPath none", 
+        expDir = expDir.substr(0, expDir.length - 4); // expDir is the same without "_cli" suffix
+        execSync(util.format("node ./lib/dts-bundle --name foo-mx --main %s --newline unix --verbose --headerPath none",
             path.join(actDir, '../es6_cli', 'index.d.ts')));
 		var name = 'foo-mx.d.ts';
 		var actualFile = path.join(actDir, name);
@@ -432,5 +432,55 @@ describe('dts bundle', function () {
 			'sub.d.ts'
 		]);
 		assert.strictEqual(getFile(actualFile), getFile(expectedFile));
-	});    
+	});
+
+	(function testit(name, assertion, run) {
+		var buildDir = path.resolve(__dirname, 'build', 'commonjs');
+		var call = function (done) {
+			var testDir = path.join(tmpDir, name);
+			var expDir = path.join(expectDir, name);
+
+			mkdirp.sync(testDir);
+
+			ncp.ncp(buildDir, testDir, function (err) {
+				if (err) {
+					done(err);
+					return;
+				}
+				assertion(testDir, expDir);
+				done();
+			});
+		};
+
+		var label = 'bundle ' + name;
+
+		if (run === 'skip') {
+			it.skip(label, call);
+		}
+		else if (run === 'only') {
+			it.only(label, call);
+		}
+		else {
+			it(label, call);
+		}
+	})('commonjs', function (actDir, expDir) {
+		var result = dts.bundle({
+			name: 'foo-mx',
+			main: path.join(actDir, '../commonjs', 'index.d.ts'),
+			newline: '\n',
+			verbose: true,
+			headerPath: "none"
+		});
+		var name = 'foo-mx.d.ts';
+		var actualFile = path.join(actDir, name);
+		assert.isTrue(result.emitted, "not emit " + actualFile);
+		var expectedFile = path.join(expDir, name);
+		assertFiles(actDir, [
+			name,
+			'index.d.ts',
+			'sub/index.d.ts',
+			'sub/sub.service.d.ts'
+		]);
+		assert.strictEqual(getFile(actualFile), getFile(expectedFile));
+	});
 });

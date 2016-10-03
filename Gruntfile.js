@@ -68,6 +68,10 @@ module.exports = function (grunt) {
 			testEs6: {
 				src: ['test/src/es6/index.ts'],
 				outDir: 'test/build/es6/'
+			},
+			testCommonJs: {
+				src: ['test/src/commonjs/index.ts'],
+				outDir: 'test/build/commonjs'
 			}
 		},
 		mochaTest: {
@@ -92,6 +96,7 @@ module.exports = function (grunt) {
 		'prep',
 		'ts:test',
 		'ts:testEs6',
+		'ts:testCommonJs',
 		'run'
 	]);
 

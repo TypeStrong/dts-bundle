@@ -140,7 +140,12 @@ var opts = {
     // path to file that contains the header
     // // insert a header in output file. i.e.: http://definitelytyped.org/guides/contributing.html#header
     // - default: null
-    headerPath: "path/to/header/file"     
+    headerPath: "path/to/header/file",
+    // text of the the header
+    // doesn't work with headerPath
+    // // insert a header in output file. i.e.: http://definitelytyped.org/guides/contributing.html#header
+    // - default: ''
+    headerTex: "" 
 };
 
 // require module
@@ -263,6 +268,7 @@ Options:
   --emitOnNoIncludedFileNotFound  emit although no included files not found. See readme "Files not found" section.
   --outputAsModuleFolder          output as module folder format (no declare module) . See readme "Module folders" section.
   --headerPath [value]            path to file that contains the header
+  --headerText [value]            text of the header. Doesn't work with headerPath.
 ````
 
 For example: 

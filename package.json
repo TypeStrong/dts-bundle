@@ -1,6 +1,6 @@
 {
   "name": "dts-bundle",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "Export TypeScript .d.ts files as an external module definition",
   "keywords": [
     "typescript",

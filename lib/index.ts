@@ -41,6 +41,7 @@ export interface Options {
     emitOnIncludedFileNotFound?: boolean;
     emitOnNoIncludedFileNotFound?: boolean;
     headerPath: string;
+    headerText: string;
 }
 
 export interface ModLine {
@@ -103,6 +104,7 @@ export function bundle(options: Options): BundleResult {
     const emitOnIncludedFileNotFound = optValue(options.emitOnIncludedFileNotFound, false);
     const emitOnNoIncludedFileNotFound = optValue(options.emitOnNoIncludedFileNotFound, false);
     const _headerPath = optValue(options.headerPath, null);
+    const headerText = optValue(options.headerText, '');
 
     // regular (non-jsdoc) comments are not actually supported by declaration compiler
     const comments = false;
@@ -141,6 +143,7 @@ export function bundle(options: Options): BundleResult {
     trace('emitOnIncludedFileNotFound:   %s', emitOnIncludedFileNotFound ? "yes" : "no");
     trace('emitOnNoIncludedFileNotFound: %s', emitOnNoIncludedFileNotFound ? "yes" : "no");
     trace("headerPath    %s", headerPath);
+    trace("headerText    %s", headerText);
 
     if (!allFiles) {
         assert(fs.existsSync(mainFile), 'main does not exist: ' + mainFile);
@@ -153,6 +156,8 @@ export function bundle(options: Options): BundleResult {
             assert(fs.existsSync(headerPath), 'header does not exist: ' + headerPath);
             headerData = fs.readFileSync(headerPath, 'utf8') + headerData;
         }
+    } else if (headerText) {
+        headerData = '/*' + headerText + '*/\n';
     }
 
     let isExclude: (file: string, arg?: boolean) => boolean;

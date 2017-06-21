@@ -539,7 +539,7 @@ export function bundle(options: Options): BundleResult {
         return name.replace(/\.\./g, '--').replace(/[\\\/]/g, separator);
     }
 
-    function mergeModulesLines(lines) {
+    function mergeModulesLines(lines: any) {
         var i = (outputAsModuleFolder ? '' : indent);
         return (lines.length === 0 ? '' : i + lines.join(newline + i)) + newline;
     }
@@ -625,7 +625,7 @@ export function bundle(options: Options): BundleResult {
             }
         };
 
-        code.split(/\r?\n/g).forEach(line => {
+        code.split(/\r?\n/g).forEach((line: any) => {
             let match: string[];
 
             // block comment end
@@ -714,7 +714,7 @@ export function bundle(options: Options): BundleResult {
 
                     let full = path.resolve(path.dirname(file), impPath);
                     // If full is not an existing file, then let's assume the extension .d.ts
-                    if(!fs.existsSync(full)) {
+                    if(!fs.existsSync(full) || fs.existsSync(full + '.d.ts')) {
                         full += '.d.ts';
                     }
                     trace(' - import relative %s (%s)', moduleName, full);

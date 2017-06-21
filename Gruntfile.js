@@ -2,19 +2,11 @@ module.exports = function (grunt) {
 	'use strict';
 
 	grunt.loadNpmTasks('grunt-ts');
-	grunt.loadNpmTasks('grunt-dtsm');
 	grunt.loadNpmTasks('grunt-mocha-test');
 	grunt.loadNpmTasks('grunt-contrib-clean');
 
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
-		dtsm: {
-			client: {
-				options: {
-					confog: './dtsm.json'
-				}
-			}
-		},
 		clean: {
 			cruft: {
 				option: {
@@ -45,7 +37,6 @@ module.exports = function (grunt) {
 			main: {
 				src: [
 					'./lib/index.ts',
-					'./typings/bundle.d.ts'
 				],
 				options: {
 					"target": "es5",
@@ -72,6 +63,10 @@ module.exports = function (grunt) {
 			testCommonJs: {
 				src: ['test/src/commonjs/index.ts'],
 				outDir: 'test/build/commonjs'
+			},
+			testConflicts: {
+				src: ['test/src/conflicts/dirname/index.ts'],
+				outDir: 'test/build/conflicts/dirname'
 			}
 		},
 		mochaTest: {
@@ -88,8 +83,7 @@ module.exports = function (grunt) {
 	grunt.registerTask('prep', [
 		'clean:tmp',
 		'clean:test',
-		'clean:cruft',
-		'dtsm'
+		'clean:cruft'
 	]);
 
 	grunt.registerTask('test', [
@@ -97,6 +91,7 @@ module.exports = function (grunt) {
 		'ts:test',
 		'ts:testEs6',
 		'ts:testCommonJs',
+		'ts:testConflicts',
 		'run'
 	]);
 

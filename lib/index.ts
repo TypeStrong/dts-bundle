@@ -22,6 +22,7 @@ const identifierExp = /^\w+(?:[\.-]\w+)*$/;
 const fileExp = /^([\./].*|.:.*)$/;
 const privateExp = /^[ \t]*(?:static )?private (?:static )?/;
 const publicExp = /^([ \t]*)(static |)(public |)(static |)(.*)/;
+const nodeModulesExp = /\/node_modules\//;
 
 export interface Options {
     main: string;
@@ -374,11 +375,11 @@ export function bundle(options: Options): BundleResult {
     if (removeSource) {
         trace('\n### remove source typings ###');
 
-        sourceTypings.forEach(p => {
+        sourceTypings.forEach((filePath: string) => {
             // safety check, only delete .d.ts files, leave our outFile intact for now
-            if (p !== outFile && dtsExp.test(p) && fs.statSync(p).isFile()) {
-                trace(' - %s', p);
-                fs.unlinkSync(p);
+            if (filePath !== outFile && dtsExp.test(filePath) && !nodeModulesExp.test(filePath) && fs.statSync(filePath).isFile()) {
+                trace(' - %s', filePath);
+                fs.unlinkSync(filePath);
             }
         });
     }

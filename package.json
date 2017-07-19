@@ -41,7 +41,7 @@
     "@types/detect-indent": "0.1.30",
     "@types/glob": "5.0.30",
     "@types/mkdirp": "0.3.29",
-    "@types/node": "8.0.0",
+    "@types/node": "8.0.14",
     "commander": "^2.9.0",
     "detect-indent": "^0.2.0",
     "glob": "^6.0.4",

@@ -1,8 +1,10 @@
 /// <reference path="./../typings/external.d.ts" />
+/// <reference path="./../node_modules/modules.d.ts" />
 
 import int = require('./lib/only-internal');
 import exp = require('./lib/exported-sub');
 import mod1 = require('external1');
+import nodeModule = require('node_module');
 
 export import Foo = require('./Foo');
 /*
@@ -22,4 +24,9 @@ export function flep(): exp.ExternalContainer {
 // bar that
 export function bar(): mod1.SomeType {
     return new mod1.SomeType();
+}
+
+// baz some of that
+export function baz(): nodeModule.SomeType {
+    return new nodeModule.SomeType();
 }

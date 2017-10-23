@@ -183,7 +183,7 @@ export function bundle(options: Options): BundleResult {
             mainFileContent += generatedLine + "\n";
         });
         mainFile = path.resolve(baseDir, "dts-bundle.tmp." + exportName + ".d.ts");
-        fs.writeFileSync(mainFile, mainFileContent, 'utf8');
+        fs.writeFileSync(mainFile, mainFileContent, { encoding: 'utf8' });
     }
 
     trace('\n### find typings ###');
@@ -424,7 +424,7 @@ export function bundle(options: Options): BundleResult {
             }
         }
 
-        fs.writeFileSync(outFile, content, 'utf8');
+        fs.writeFileSync(outFile, content, { encoding: 'utf8' });
         bundleResult.emitted = true;
     } else {
         warning(" XXX Not emit due to exist files not found.")
@@ -701,7 +701,7 @@ export function bundle(options: Options): BundleResult {
                 assert(moduleName);
 
                 const impPath = path.resolve(path.dirname(file), moduleName);
-
+                
                 // filename (i.e. starts with a dot, slash or windows drive letter)
                 if (fileExp.test(moduleName)) {
                     // TODO: some module replacing is handled here, whereas the rest is
@@ -713,6 +713,25 @@ export function bundle(options: Options): BundleResult {
                     res.lines.push(modLine);
 
                     let full = path.resolve(path.dirname(file), impPath);
+                    // If full is not an existing file, then let's assume the extension .d.ts
+                    if(!fs.existsSync(full) || fs.existsSync(full + '.d.ts')) {
+                        full += '.d.ts';
+                    }
+                    trace(' - import relative %s (%s)', moduleName, full);
+
+                    pushUnique(res.relativeImports, full);
+                    res.importLineRef.push(modLine);
+                // If the path given was an absolute path
+                } else if (fs.existsSync(path.join(baseDir, moduleName))
+                    || fs.existsSync(path.join(baseDir, moduleName + '.d.ts'))) {
+                    
+                    const newImpPath = path.join(baseDir, moduleName);
+                    let modLine: ModLine = {
+                        original: lead + quote + getExpName(newImpPath) + trail
+                    };
+                    res.lines.push(modLine);
+
+                    let full = path.resolve(path.dirname(baseDir), newImpPath);
                     // If full is not an existing file, then let's assume the extension .d.ts
                     if(!fs.existsSync(full) || fs.existsSync(full + '.d.ts')) {
                         full += '.d.ts';

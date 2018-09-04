@@ -717,6 +717,8 @@ export function bundle(options: Options): BundleResult {
                     if(!fs.existsSync(full) || fs.existsSync(full + '.d.ts')) {
                         full += '.d.ts';
                     }
+                    let stat = fs.statSync(full);
+                    full = stat.isDirectory() ? path.join(full, 'index.d.ts') : full;
                     trace(' - import relative %s (%s)', moduleName, full);
 
                     pushUnique(res.relativeImports, full);

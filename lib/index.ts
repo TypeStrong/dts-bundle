@@ -517,7 +517,7 @@ export function bundle(options: Options): BundleResult {
     }
 
     function getModName(file: string) {
-        return path.relative(baseDir, path.dirname(file) + path.sep + path.basename(file).replace(/\.d\.ts$/, ''));
+        return path.relative(baseDir, path.dirname(file) + path.sep + path.basename(file).replace(/index\.d\.ts$|\.d\.ts$/, ''));
     }
 
     function getExpName(file: string) {
@@ -583,9 +583,6 @@ export function bundle(options: Options): BundleResult {
             trace(' X - File not found: %s', file);
             res.fileExists = false;
             return res;
-        }
-        if (fs.lstatSync(file).isDirectory()) { // if file is a directory then lets assume commonjs convention of an index file in the given folder
-            file = path.join(file, 'index.d.ts');
         }
         const code = fs.readFileSync(file, 'utf8').replace(bomOptExp, '').replace(/\s*$/, '');
         res.indent = detectIndent(code) || indent;
@@ -717,8 +714,9 @@ export function bundle(options: Options): BundleResult {
                     if(!fs.existsSync(full) || fs.existsSync(full + '.d.ts')) {
                         full += '.d.ts';
                     }
-                    let stat = fs.statSync(full);
-                    full = stat.isDirectory() ? path.join(full, 'index.d.ts') : full;
+                    if (fs.lstatSync(full).isDirectory()) {
+                        full = path.join(full, 'index.d.ts'); // normalize to actual file path
+                    }
                     trace(' - import relative %s (%s)', moduleName, full);
 
                     pushUnique(res.relativeImports, full);

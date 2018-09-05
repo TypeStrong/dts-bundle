@@ -534,7 +534,7 @@ describe('dts bundle', function () {
 	});
 
   (function testit(name, assertion, run) {
-    var buildDir = path.resolve(__dirname, 'build', 'dot-slash');
+    var buildDir = path.resolve(__dirname, 'build', name);
     var call = function (done) {
       var testDir = path.join(tmpDir, name);
       var expDir = path.join(expectDir, name);

@@ -68,9 +68,9 @@ module.exports = function (grunt) {
 				src: ['test/src/conflicts/dirname/index.ts'],
 				outDir: 'test/build/conflicts/dirname'
 			},
-      testDotSlash: {
-        src: ['test/src/dot-slash/index.ts'],
-        outDir: 'test/build/dot-slash'
+			testDotSlash: {
+				src: ['test/src/dot-slash/index.ts'],
+				outDir: 'test/build/dot-slash'
       }
 		},
 		mochaTest: {
@@ -96,6 +96,7 @@ module.exports = function (grunt) {
 		'ts:testEs6',
 		'ts:testCommonJs',
 		'ts:testConflicts',
+		'ts:testDotSlash',
 		'run'
 	]);
 

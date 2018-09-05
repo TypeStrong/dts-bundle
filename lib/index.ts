@@ -183,7 +183,7 @@ export function bundle(options: Options): BundleResult {
             mainFileContent += generatedLine + "\n";
         });
         mainFile = path.resolve(baseDir, "dts-bundle.tmp." + exportName + ".d.ts");
-        fs.writeFileSync(mainFile, mainFileContent, 'utf8');
+        fs.writeFileSync(mainFile, mainFileContent, { encoding: 'utf8' });
     }
 
     trace('\n### find typings ###');
@@ -424,7 +424,7 @@ export function bundle(options: Options): BundleResult {
             }
         }
 
-        fs.writeFileSync(outFile, content, 'utf8');
+        fs.writeFileSync(outFile, content, { encoding: 'utf8' });
         bundleResult.emitted = true;
     } else {
         warning(" XXX Not emit due to exist files not found.")
@@ -517,7 +517,7 @@ export function bundle(options: Options): BundleResult {
     }
 
     function getModName(file: string) {
-        return path.relative(baseDir, path.dirname(file) + path.sep + path.basename(file).replace(/\.d\.ts$/, ''));
+        return path.relative(baseDir, path.dirname(file) + path.sep + path.basename(file).replace(/index\.d\.ts$|\.d\.ts$/, ''));
     }
 
     function getExpName(file: string) {
@@ -583,9 +583,6 @@ export function bundle(options: Options): BundleResult {
             trace(' X - File not found: %s', file);
             res.fileExists = false;
             return res;
-        }
-        if (fs.lstatSync(file).isDirectory()) { // if file is a directory then lets assume commonjs convention of an index file in the given folder
-            file = path.join(file, 'index.d.ts');
         }
         const code = fs.readFileSync(file, 'utf8').replace(bomOptExp, '').replace(/\s*$/, '');
         res.indent = detectIndent(code) || indent;
@@ -716,6 +713,9 @@ export function bundle(options: Options): BundleResult {
                     // If full is not an existing file, then let's assume the extension .d.ts
                     if(!fs.existsSync(full) || fs.existsSync(full + '.d.ts')) {
                         full += '.d.ts';
+                    }
+                    if (fs.lstatSync(full).isDirectory()) {
+                        full = path.join(full, 'index.d.ts'); // normalize to actual file path
                     }
                     trace(' - import relative %s (%s)', moduleName, full);
 

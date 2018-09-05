@@ -67,7 +67,11 @@ module.exports = function (grunt) {
 			testConflicts: {
 				src: ['test/src/conflicts/dirname/index.ts'],
 				outDir: 'test/build/conflicts/dirname'
-			}
+			},
+      testDotSlash: {
+        src: ['test/src/dot-slash/index.ts'],
+        outDir: 'test/build/dot-slash'
+      }
 		},
 		mochaTest: {
 			options: {

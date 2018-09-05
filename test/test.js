@@ -532,4 +532,54 @@ describe('dts bundle', function () {
 		]);
 		assert.strictEqual(getFile(actualFile), getFile(expectedFile));
 	});
+
+  (function testit(name, assertion, run) {
+    var buildDir = path.resolve(__dirname, 'build', 'dot-slash');
+    var call = function (done) {
+      var testDir = path.join(tmpDir, name);
+      var expDir = path.join(expectDir, name);
+
+      mkdirp.sync(testDir);
+
+      ncp.ncp(buildDir, testDir, function (err) {
+        if (err) {
+          done(err);
+          return;
+        }
+        assertion(testDir, expDir);
+        done();
+      });
+    };
+
+    var label = 'bundle ' + name;
+
+    if (run === 'skip') {
+      it.skip(label, call);
+    }
+    else if (run === 'only') {
+      it.only(label, call);
+    }
+    else {
+      it(label, call);
+    }
+  })('dot-slash', function (actDir, expDir) {
+    var result = dts.bundle({
+      name: 'bundle',
+      main: path.join(actDir, '../dot-slash', 'index.d.ts'),
+      newline: '\n',
+      verbose: true,
+      headerPath: "none"
+    });
+    var name = 'bundle.d.ts';
+    var actualFile = path.join(actDir, name);
+    assert.isTrue(result.emitted, "not emit " + actualFile);
+    var expectedFile = path.join(expDir, name);
+    assertFiles(actDir, [
+      name,
+      'index.d.ts',
+      'SomeOtherClass.d.ts'
+    ]);
+    assert.strictEqual(getFile(actualFile), getFile(expectedFile));
+  })
+
 });

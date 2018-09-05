@@ -10,9 +10,6 @@ declare module 'bundle' {
 declare module 'bundle/SomeOtherClass' {
     import { IShouldBeThereOnlyOnce } from "bundle/";
     export class SomeOtherClass {
-        /**
-          * Extract metadata from the given audio file
-          */
         static saveTheWorld(once: IShouldBeThereOnlyOnce): Promise<any>;
     }
 }

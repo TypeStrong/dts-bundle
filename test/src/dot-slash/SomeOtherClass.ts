@@ -1,10 +1,7 @@
-import {IShouldBeThereOnlyOnce} from "./";
+import {IShouldBeThereOnlyOnce} from "./"; // The tricky part
 
 export class SomeOtherClass {
 
-  /**
-   * Extract metadata from the given audio file
-   */
   public static saveTheWorld(once: IShouldBeThereOnlyOnce): Promise<any> {
     return null;
   }

@@ -40,8 +40,8 @@ Let's assume the project is called `cool-project` and the main module is `build/
 var dts = require('dts-bundle');
 
 dts.bundle({
-	name: 'cool-project',
-	main: 'build/index.d.ts'
+    name: 'cool-project',
+    main: 'build/index.d.ts'
 });
 ````
 
@@ -53,12 +53,12 @@ This will traverse all references and imports for the .d.ts files of your sub-mo
 
 ````json
 {
-	"name": "cool-project",
-	"version": "0.1.3",
+    "name": "cool-project",
+    "version": "0.1.3",
 
-	"typescript": {
-		"definition": "build/cool-project.d.ts"
-	}
+    "typescript": {
+        "definition": "build/cool-project.d.ts"
+    }
 }
 ````
 
@@ -77,56 +77,56 @@ Example of all options:
 ````js
 var opts = {
 
-	// Required
+    // Required
 
-	// name of module likein package.json
-	// - used to declare module & import/require
-	name: 'cool-project',
-	// path to entry-point (generated .d.ts file for main module)
+    // name of module likein package.json
+    // - used to declare module & import/require
+    name: 'cool-project',
+    // path to entry-point (generated .d.ts file for main module)
     // if you want to load all .d.ts files from a path recursively you can use "path/project/**/*.d.ts"
     //  ^ *** Experimental, TEST NEEDED, see "All .d.ts files" section 
-	// - either relative or absolute
-	main: 'build/index.d.ts',
+    // - either relative or absolute
+    main: 'build/index.d.ts',
 
-	// Optional
+    // Optional
 
-	// base directory to be used for discovering type declarations (i.e. from this project itself)
-	// - default: dirname of main
-	baseDir: 'build',
-	// path of output file. Is relative from baseDir but you can use absolute paths. 
+    // base directory to be used for discovering type declarations (i.e. from this project itself)
+    // - default: dirname of main
+    baseDir: 'build',
+    // path of output file. Is relative from baseDir but you can use absolute paths. 
     // if starts with "~/" then is relative to current path. See https://github.com/TypeStrong/dts-bundle/issues/26
     //  ^ *** Experimental, TEST NEEDED    
-	// - default: "<baseDir>/<name>.d.ts"
-	out: 'dist/cool-project.d.ts',
-	// include typings outside of the 'baseDir' (i.e. like node.d.ts)
-	// - default: false
-	externals: false,
-	// reference external modules as <reference path="..." /> tags *** Experimental, TEST NEEDED
-	// - default: false
-	referenceExternals: false,
-	// filter to exclude typings, either a RegExp or a callback. match path relative to opts.baseDir
-	// - RegExp: a match excludes the file
-	// - function: (file:String, external:Boolean) return true to exclude, false to allow
-	// - always use forward-slashes (even on Windows)
-	// - default: *pass*
-	exclude: /^defs\/$/,
-  	// delete all source typings (i.e. "<baseDir>/**/*.d.ts")
-	// - default: false
-	removeSource: false,
-	// newline to use in output file
-	newline: os.EOL,
-	// indentation to use in output file
-	// - default 4 spaces
-	indent: '	',
-	// prefix for rewriting module names
-	// - default ''
-	prefix: '__',
-	// separator for rewriting module 'path' names
-	// - default: forward slash (like sub-modules)
-	separator: '/',
-	// enable verbose mode, prints detailed info about all references and includes/excludes
-	// - default: false
-	verbose: false,
+    // - default: "<baseDir>/<name>.d.ts"
+    out: 'dist/cool-project.d.ts',
+    // include typings outside of the 'baseDir' (i.e. like node.d.ts)
+    // - default: false
+    externals: false,
+    // reference external modules as <reference path="..." /> tags *** Experimental, TEST NEEDED
+    // - default: false
+    referenceExternals: false,
+    // filter to exclude typings, either a RegExp or a callback. match path relative to opts.baseDir
+    // - RegExp: a match excludes the file
+    // - function: (file:String, external:Boolean) return true to exclude, false to allow
+    // - always use forward-slashes (even on Windows)
+    // - default: *pass*
+    exclude: /^defs\/$/,
+    // delete all source typings (i.e. "<baseDir>/**/*.d.ts")
+    // - default: false
+    removeSource: false,
+    // newline to use in output file
+    newline: os.EOL,
+    // indentation to use in output file
+    // - default 4 spaces
+    indent: '	',
+    // prefix for rewriting module names
+    // - default ''
+    prefix: '__',
+    // separator for rewriting module 'path' names
+    // - default: forward slash (like sub-modules)
+    separator: '/',
+    // enable verbose mode, prints detailed info about all references and includes/excludes
+    // - default: false
+    verbose: false,
     // emit although included files not found. See "Files not found" section. 
     // *** Experimental, TEST NEEDED
     // - default: false 
@@ -145,7 +145,7 @@ var opts = {
     // doesn't work with headerPath
     // // insert a header in output file. i.e.: http://definitelytyped.org/guides/contributing.html#header
     // - default: ''
-    headerTex: "" 
+    headerText: "" 
 };
 
 // require module

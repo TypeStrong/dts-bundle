@@ -762,7 +762,7 @@ export function bundle(options: Options): BundleResult {
                     let [_, sp, static1, pub, static2, ident] = match;
                     line = sp + static1 + static2 + ident;
                 }
-                if (inSourceTypings(file)) {
+                if (inSourceTypings(file) && !outputAsModuleFolder) {
                     // for internal typings, remove the 'declare' keyword (but leave 'export' intact)
                     res.lines.push({ original: line.replace(/^(export )?declare /g, '$1') });
                 }

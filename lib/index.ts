@@ -231,12 +231,11 @@ export function bundle(options: Options): BundleResult {
     // map all exports to their file
     trace('\n### map exports ###');
 
-    let exportMap = Object.create(null);
+    let exportMap = Object.create(null); // values are arrays of parsed files
     Object.keys(fileMap).forEach(file => {
         let parse = fileMap[file];
         parse.exports.forEach(name => {
-            assert(!(name in exportMap), 'already got export for: ' + name);
-            exportMap[name] = parse;
+            (exportMap[name] || (exportMap[name] = [])).push(parse);
             trace('- %s -> %s', name, parse.file);
         });
     });
@@ -266,20 +265,23 @@ export function bundle(options: Options): BundleResult {
             usedTypings.push(parse);
 
             parse.externalImports.forEach(name => {
-                let p = exportMap[name];
-                if (!externals) {
-                    trace(' - exclude external %s', name);
-                    pushUnique(externalDependencies, !p ? name : p.file);
-                    return;
+                let parses = exportMap[name];
+
+                for (let p of parses) {
+                    if (!externals) {
+                        trace(' - exclude external %s', name);
+                        pushUnique(externalDependencies, !p ? name : p.file);
+                        return;
+                    }
+                    if (isExclude(path.relative(baseDir, p.file), true)) {
+                        trace(' - exclude external filter %s', name);
+                        pushUnique(excludedTypings, p.file);
+                        return;
+                    }
+                    trace(' - include external %s', name);
+                    assert(p, name);
+                    queue.push(p);
                 }
-                if (isExclude(path.relative(baseDir, p.file), true)) {
-                    trace(' - exclude external filter %s', name);
-                    pushUnique(excludedTypings, p.file);
-                    return;
-                }
-                trace(' - include external %s', name);
-                assert(p, name);
-                queue.push(p);
             });
             parse.relativeImports.forEach(file => {
                 let p = fileMap[file];
@@ -749,6 +751,11 @@ export function bundle(options: Options): BundleResult {
 
                 trace(' - declare %s', moduleName);
                 pushUnique(res.exports, moduleName);
+
+                // for internal typings, can't have nested declares w/ modules
+                if (inSourceTypings(file)) {
+                    line = line.replace('declare module', 'module');
+                }
                 let modLine: ModLine = {
                     original: line
                 };

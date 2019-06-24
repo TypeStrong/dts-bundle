@@ -183,7 +183,7 @@ export function bundle(options: Options): BundleResult {
             mainFileContent += generatedLine + "\n";
         });
         mainFile = path.resolve(baseDir, "dts-bundle.tmp." + exportName + ".d.ts");
-        fs.writeFileSync(mainFile, mainFileContent, 'utf8');
+        fs.writeFileSync(mainFile, mainFileContent, { encoding: 'utf8' });
     }
 
     trace('\n### find typings ###');
@@ -424,7 +424,7 @@ export function bundle(options: Options): BundleResult {
             }
         }
 
-        fs.writeFileSync(outFile, content, 'utf8');
+        fs.writeFileSync(outFile, content, { encoding: 'utf8' });
         bundleResult.emitted = true;
     } else {
         warning(" XXX Not emit due to exist files not found.")
@@ -587,7 +587,7 @@ export function bundle(options: Options): BundleResult {
         if (fs.lstatSync(file).isDirectory()) { // if file is a directory then lets assume commonjs convention of an index file in the given folder
             file = path.join(file, 'index.d.ts');
         }
-        const code = fs.readFileSync(file, 'utf8').replace(bomOptExp, '').replace(/\s*$/, '');
+        const code = fs.readFileSync(file, { encoding: 'utf8' }).replace(bomOptExp, '').replace(/\s*$/, '');
         res.indent = detectIndent(code) || indent;
 
         // buffer multi-line comments, handle JSDoc

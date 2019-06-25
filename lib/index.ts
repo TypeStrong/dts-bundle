@@ -267,20 +267,29 @@ export function bundle(options: Options): BundleResult {
             parse.externalImports.forEach(name => {
                 let parses = exportMap[name];
 
-                for (let p of parses) {
-                    if (!externals) {
-                        trace(' - exclude external %s', name);
-                        pushUnique(externalDependencies, !p ? name : p.file);
-                        return;
+                if (!externals) {
+                    trace(' - exclude external %s', name);
+
+                    if (parses) {
+                        for (let p of parses) {
+                            pushUnique(externalDependencies, p.file);
+                        }
+                    } else {
+                        pushUnique(externalDependencies, name);
                     }
-                    if (isExclude(path.relative(baseDir, p.file), true)) {
-                        trace(' - exclude external filter %s', name);
-                        pushUnique(excludedTypings, p.file);
-                        return;
+                } else {
+                    if (parses) {
+                        for (let p of parses) {
+                            if (isExclude(path.relative(baseDir, p.file), true)) {
+                                trace(' - exclude external filter %s', name);
+                                pushUnique(excludedTypings, p.file);
+                            } else {
+                                trace(' - include external %s', name);
+                                assert(p, name);
+                                queue.push(p);
+                            }
+                        }
                     }
-                    trace(' - include external %s', name);
-                    assert(p, name);
-                    queue.push(p);
                 }
             });
             parse.relativeImports.forEach(file => {

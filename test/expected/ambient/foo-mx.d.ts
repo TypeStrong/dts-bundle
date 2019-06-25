@@ -1,5 +1,7 @@
 // Dependencies for this module:
 //   ambient1.d.ts
+//   ambient2.d.ts
+//   ../../src/ambient/mymodule.d.ts
 
 declare module 'foo-mx' {
     export { MyInterface } from 'mymodule';

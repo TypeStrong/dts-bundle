@@ -42,6 +42,7 @@ export interface Options {
     emitOnNoIncludedFileNotFound?: boolean;
     headerPath: string;
     headerText: string;
+    transformModuleBody: (moduleBody: string, moduleName?: string) => string
 }
 
 export interface ModLine {
@@ -183,7 +184,7 @@ export function bundle(options: Options): BundleResult {
             mainFileContent += generatedLine + "\n";
         });
         mainFile = path.resolve(baseDir, "dts-bundle.tmp." + exportName + ".d.ts");
-        fs.writeFileSync(mainFile, mainFileContent, 'utf8');
+        fs.writeFileSync(mainFile, mainFileContent, { encoding: 'utf8' });
     }
 
     trace('\n### find typings ###');
@@ -424,7 +425,7 @@ export function bundle(options: Options): BundleResult {
             }
         }
 
-        fs.writeFileSync(outFile, content, 'utf8');
+        fs.writeFileSync(outFile, content, { encoding: 'utf8' });
         bundleResult.emitted = true;
     } else {
         warning(" XXX Not emit due to exist files not found.")
@@ -544,16 +545,27 @@ export function bundle(options: Options): BundleResult {
         return (lines.length === 0 ? '' : i + lines.join(newline + i)) + newline;
     }
 
-    function formatModule(file: string, lines: string[]) {
-        let out = '';
-        if (outputAsModuleFolder) {
-            return mergeModulesLines(lines);
+    function transformModuleBody(moduleBody: string, moduleName?: string) {
+        if (typeof options.transformModuleBody === 'function') {
+            moduleBody = options.transformModuleBody(moduleBody, moduleName);
         }
+        return moduleBody
+    }
 
-        out += 'declare module \'' + getExpName(file) + '\' {' + newline;
-        out += mergeModulesLines(lines);
-        out += '}' + newline;
-        return out;
+    function formatModule(file: string, lines: string[]) {
+        let moduleBody = mergeModulesLines(lines);
+
+        if (outputAsModuleFolder) {
+            moduleBody = transformModuleBody(moduleBody);
+            return moduleBody;
+
+        } else {
+            let moduleName = getExpName(file);
+            moduleBody = transformModuleBody(moduleBody, moduleName);
+
+            return 'declare module \'' + moduleName + '\' {' + newline +
+                moduleBody + '}' + newline;
+        }
     }
 
     // main info extractor
@@ -587,7 +599,7 @@ export function bundle(options: Options): BundleResult {
         if (fs.lstatSync(file).isDirectory()) { // if file is a directory then lets assume commonjs convention of an index file in the given folder
             file = path.join(file, 'index.d.ts');
         }
-        const code = fs.readFileSync(file, 'utf8').replace(bomOptExp, '').replace(/\s*$/, '');
+        const code = fs.readFileSync(file, { encoding: 'utf8' }).replace(bomOptExp, '').replace(/\s*$/, '');
         res.indent = detectIndent(code) || indent;
 
         // buffer multi-line comments, handle JSDoc

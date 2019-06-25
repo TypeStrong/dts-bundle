@@ -332,6 +332,31 @@ describe('dts bundle', function () {
 		assert.strictEqual(getFile(actualFile), getFile(expectedFile));
 	});
 
+	testit('transformModuleBody', function (actDir, expDir) {
+		var result = dts.bundle({
+			name: 'foo-mx',
+			main: path.join(actDir, 'index.d.ts'),
+			newline: '\n',
+            verbose: true,
+			headerPath: "none",
+			transformModuleBody(moduleBody) {
+				return moduleBody + '/* INJECTED VIA transformModuleBody */\n';
+			}
+		});
+		var name = 'foo-mx.d.ts';
+		var actualFile = path.join(actDir, name);
+        assert.isTrue(result.emitted, "not emit " + actualFile);
+		var expectedFile = path.join(expDir, name);
+		assertFiles(actDir, [
+			name,
+			'index.d.ts',
+			'Foo.d.ts',
+			'lib/exported-sub.d.ts',
+			'lib/only-internal.d.ts'
+		]);
+		assert.strictEqual(getFile(actualFile), getFile(expectedFile));
+	});
+
   	//testit('includeExclude_cli', function (actDir, expDir) {  }); // No exclude options available from CLI.
 
 	(function testit(name, assertion, run) {

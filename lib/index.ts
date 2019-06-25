@@ -17,6 +17,7 @@ const bomOptExp = /^\uFEFF?/;
 const externalExp = /^([ \t]*declare module )(['"])(.+?)(\2[ \t]*{?.*)$/;
 const importExp = /^([ \t]*(?:export )?(?:import .+? )= require\()(['"])(.+?)(\2\);.*)$/;
 const importEs6Exp = /^([ \t]*(?:export|import) ?(?:(?:\* (?:as [^ ,]+)?)|.*)?,? ?(?:[^ ,]+ ?,?)(?:\{(?:[^ ,]+ ?,?)*\})? ?from )(['"])([^ ,]+)(\2;.*)$/;
+const importEs6InlineExp = /^(.*?import\()(['"])(.+?)(\2\).*)$/;
 const referenceTagExp = /^[ \t]*\/\/\/[ \t]*<reference[ \t]+path=(["'])(.*?)\1?[ \t]*\/>.*$/;
 const identifierExp = /^\w+(?:[\.-]\w+)*$/;
 const fileExp = /^([\./].*|.:.*)$/;
@@ -696,6 +697,7 @@ export function bundle(options: Options): BundleResult {
 
             // import() statement or es6 import
             if ((line.indexOf("from") >= 0 && (match = line.match(importEs6Exp))) ||
+                (line.indexOf("import") >=0 && (match = line.match(importEs6InlineExp))) ||
                 (line.indexOf("require") >= 0 && (match = line.match(importExp)))) {
                 const [_, lead, quote, moduleName, trail] = match;
                 assert(moduleName);
@@ -708,7 +710,9 @@ export function bundle(options: Options): BundleResult {
                     // done in the "rewrite global external modules" step. It may be
                     // more clear to do all of it in that step.
                     let modLine: ModLine = {
-                        original: lead + quote + getExpName(impPath) + trail
+                        original: removeDeclares(
+                            lead + quote + getExpName(impPath) + trail
+                        )
                     };
                     res.lines.push(modLine);
 
@@ -725,7 +729,7 @@ export function bundle(options: Options): BundleResult {
                 // identifier
                 else {
                     let modLine: ModLine = {
-                        original: line
+                        original: removeDeclares(line)
                     };
                     trace(' - import external %s', moduleName);
 
@@ -763,8 +767,9 @@ export function bundle(options: Options): BundleResult {
                     line = sp + static1 + static2 + ident;
                 }
                 if (inSourceTypings(file)) {
-                    // for internal typings, remove the 'declare' keyword (but leave 'export' intact)
-                    res.lines.push({ original: line.replace(/^(export )?declare /g, '$1') });
+                    res.lines.push({
+                        original: removeDeclares(line)
+                    });
                 }
                 else {
                     res.lines.push({ original: line });
@@ -823,6 +828,12 @@ function replaceImportExportEs6(line: string, replacer: (str: string) => string)
         }
     }
     return line;
+}
+
+function removeDeclares(line: string) {
+    return line
+        .replace(/^(export )?declare /g, '$1')
+        .replace(/^declare (const|let)/g, '$1')
 }
 
 function replaceExternal(line: string, replacer: (str: string) => string) {

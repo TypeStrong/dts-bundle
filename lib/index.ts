@@ -17,6 +17,7 @@ const bomOptExp = /^\uFEFF?/;
 const externalExp = /^([ \t]*declare module )(['"])(.+?)(\2[ \t]*{?.*)$/;
 const importExp = /^([ \t]*(?:export )?(?:import .+? )= require\()(['"])(.+?)(\2\);.*)$/;
 const importEs6Exp = /^([ \t]*(?:export|import) ?(?:(?:\* (?:as [^ ,]+)?)|.*)?,? ?(?:[^ ,]+ ?,?)(?:\{(?:[^ ,]+ ?,?)*\})? ?from )(['"])([^ ,]+)(\2;.*)$/;
+const importEs6SideEffectExp = /^([ \t]*import )(['"])(.+?)(\2;.*)$/;
 const importEs6InlineExp = /^(.*?import\()(['"])(.+?)(\2\).*)$/;
 const referenceTagExp = /^[ \t]*\/\/\/[ \t]*<reference[ \t]+path=(["'])(.*?)\1?[ \t]*\/>.*$/;
 const identifierExp = /^\w+(?:[\.-]\w+)*$/;
@@ -698,33 +699,45 @@ export function bundle(options: Options): BundleResult {
             // import() statement or es6 import
             if ((line.indexOf("from") >= 0 && (match = line.match(importEs6Exp))) ||
                 (line.indexOf("import") >=0 && (match = line.match(importEs6InlineExp))) ||
+                (line.indexOf("import") >=0 && (match = line.match(importEs6SideEffectExp))) ||
                 (line.indexOf("require") >= 0 && (match = line.match(importExp)))) {
                 const [_, lead, quote, moduleName, trail] = match;
                 assert(moduleName);
 
                 const impPath = path.resolve(path.dirname(file), moduleName);
+                let full = path.resolve(path.dirname(file), impPath); // combine with above line?
 
                 // filename (i.e. starts with a dot, slash or windows drive letter)
                 if (fileExp.test(moduleName)) {
-                    // TODO: some module replacing is handled here, whereas the rest is
-                    // done in the "rewrite global external modules" step. It may be
-                    // more clear to do all of it in that step.
-                    let modLine: ModLine = {
-                        original: removeDeclares(
-                            lead + quote + getExpName(impPath) + trail
-                        )
-                    };
-                    res.lines.push(modLine);
+                    let assumeExists;
 
-                    let full = path.resolve(path.dirname(file), impPath);
                     // If full is not an existing file, then let's assume the extension .d.ts
-                    if(!fs.existsSync(full) || fs.existsSync(full + '.d.ts')) {
+                    if (fs.existsSync(full + '.d.ts')) {
                         full += '.d.ts';
+                        assumeExists = true;
+                    } else {
+                        assumeExists = fs.existsSync(full);
                     }
-                    trace(' - import relative %s (%s)', moduleName, full);
 
-                    pushUnique(res.relativeImports, full);
-                    res.importLineRef.push(modLine);
+                    if (!assumeExists) { // probably a resource typescript doesn't know how to handle
+                        res.lines.push({ original: line }); // TOD: still transform the path?
+
+                    } else {
+                        // TODO: some module replacing is handled here, whereas the rest is
+                        // done in the "rewrite global external modules" step. It may be
+                        // more clear to do all of it in that step.
+                        let modLine: ModLine = {
+                            original: removeDeclares(
+                                lead + quote + getExpName(impPath) + trail
+                            )
+                        };
+                        res.lines.push(modLine);
+
+                        trace(' - import relative %s (%s)', moduleName, full);
+
+                        pushUnique(res.relativeImports, full);
+                        res.importLineRef.push(modLine);
+                    }
                 }
                 // identifier
                 else {

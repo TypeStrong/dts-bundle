@@ -385,6 +385,56 @@ describe('dts bundle', function () {
 	});
 
 	(function testit(name, assertion, run) {
+		var buildDir = path.resolve(__dirname, 'build', 'ambient');
+		var call = function (done) {
+			var testDir = path.join(tmpDir, name);
+			var expDir = path.join(expectDir, name);
+
+			mkdirp.sync(testDir);
+
+			ncp.ncp(buildDir, testDir, function (err) {
+				if (err) {
+					done(err);
+					return;
+				}
+				assertion(testDir, expDir);
+				done();
+			});
+		};
+
+		var label = 'bundle ' + name;
+
+		if (run === 'skip') {
+			it.skip(label, call);
+		}
+		else if (run === 'only') {
+			it.only(label, call);
+		}
+		else {
+			it(label, call);
+		}
+	})('ambient', function (actDir, expDir) {
+		var result = dts.bundle({
+			name: 'foo-mx',
+			main: path.join(actDir, 'index.d.ts'),
+			newline: '\n',
+            verbose: true,
+            headerPath: "none"
+		});
+		var name = 'foo-mx.d.ts';
+		var actualFile = path.join(actDir, name);
+        assert.isTrue(result.emitted, "not emit " + actualFile);
+		var expectedFile = path.join(expDir, name);
+		assertFiles(actDir, [
+			name,
+			'index.d.ts',
+			'ambient1.d.ts',
+			'ambient2.d.ts',
+		]);
+		assert.strictEqual(getFile(actualFile), getFile(expectedFile));
+	});
+
+	(function testit(name, assertion, run) {
 		var buildDir = path.resolve(__dirname, 'build', 'es6');
 		var call = function (done) {
 			var testDir = path.join(tmpDir, name);

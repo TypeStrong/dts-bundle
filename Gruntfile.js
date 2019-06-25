@@ -67,6 +67,10 @@ module.exports = function (grunt) {
 			testConflicts: {
 				src: ['test/src/conflicts/dirname/index.ts'],
 				outDir: 'test/build/conflicts/dirname'
+			},
+			testAmbient: {
+				src: ['test/src/ambient/index.ts'],
+				outDir: 'test/build/ambient'
 			}
 		},
 		mochaTest: {
@@ -92,6 +96,7 @@ module.exports = function (grunt) {
 		'ts:testEs6',
 		'ts:testCommonJs',
 		'ts:testConflicts',
+		'ts:testAmbient',
 		'run'
 	]);
 

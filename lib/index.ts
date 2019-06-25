@@ -183,7 +183,7 @@ export function bundle(options: Options): BundleResult {
             mainFileContent += generatedLine + "\n";
         });
         mainFile = path.resolve(baseDir, "dts-bundle.tmp." + exportName + ".d.ts");
-        fs.writeFileSync(mainFile, mainFileContent, 'utf8');
+        fs.writeFileSync(mainFile, mainFileContent, { encoding: 'utf8' });
     }
 
     trace('\n### find typings ###');
@@ -231,12 +231,11 @@ export function bundle(options: Options): BundleResult {
     // map all exports to their file
     trace('\n### map exports ###');
 
-    let exportMap = Object.create(null);
+    let exportMap = Object.create(null); // values are arrays of parsed files
     Object.keys(fileMap).forEach(file => {
         let parse = fileMap[file];
         parse.exports.forEach(name => {
-            assert(!(name in exportMap), 'already got export for: ' + name);
-            exportMap[name] = parse;
+            (exportMap[name] || (exportMap[name] = [])).push(parse);
             trace('- %s -> %s', name, parse.file);
         });
     });
@@ -266,20 +265,32 @@ export function bundle(options: Options): BundleResult {
             usedTypings.push(parse);
 
             parse.externalImports.forEach(name => {
-                let p = exportMap[name];
+                let parses = exportMap[name];
+
                 if (!externals) {
                     trace(' - exclude external %s', name);
-                    pushUnique(externalDependencies, !p ? name : p.file);
-                    return;
+
+                    if (parses) {
+                        for (let p of parses) {
+                            pushUnique(externalDependencies, p.file);
+                        }
+                    } else {
+                        pushUnique(externalDependencies, name);
+                    }
+                } else {
+                    if (parses) {
+                        for (let p of parses) {
+                            if (isExclude(path.relative(baseDir, p.file), true)) {
+                                trace(' - exclude external filter %s', name);
+                                pushUnique(excludedTypings, p.file);
+                            } else {
+                                trace(' - include external %s', name);
+                                assert(p, name);
+                                queue.push(p);
+                            }
+                        }
+                    }
                 }
-                if (isExclude(path.relative(baseDir, p.file), true)) {
-                    trace(' - exclude external filter %s', name);
-                    pushUnique(excludedTypings, p.file);
-                    return;
-                }
-                trace(' - include external %s', name);
-                assert(p, name);
-                queue.push(p);
             });
             parse.relativeImports.forEach(file => {
                 let p = fileMap[file];
@@ -424,7 +435,7 @@ export function bundle(options: Options): BundleResult {
             }
         }
 
-        fs.writeFileSync(outFile, content, 'utf8');
+        fs.writeFileSync(outFile, content, { encoding: 'utf8' });
         bundleResult.emitted = true;
     } else {
         warning(" XXX Not emit due to exist files not found.")
@@ -587,7 +598,7 @@ export function bundle(options: Options): BundleResult {
         if (fs.lstatSync(file).isDirectory()) { // if file is a directory then lets assume commonjs convention of an index file in the given folder
             file = path.join(file, 'index.d.ts');
         }
-        const code = fs.readFileSync(file, 'utf8').replace(bomOptExp, '').replace(/\s*$/, '');
+        const code = fs.readFileSync(file, { encoding: 'utf8' }).replace(bomOptExp, '').replace(/\s*$/, '');
         res.indent = detectIndent(code) || indent;
 
         // buffer multi-line comments, handle JSDoc
@@ -749,6 +760,11 @@ export function bundle(options: Options): BundleResult {
 
                 trace(' - declare %s', moduleName);
                 pushUnique(res.exports, moduleName);
+
+                // for internal typings, can't have nested declares w/ modules
+                if (inSourceTypings(file)) {
+                    line = line.replace('declare module', 'module');
+                }
                 let modLine: ModLine = {
                     original: line
                 };

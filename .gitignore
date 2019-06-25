@@ -13,6 +13,7 @@
 /test/build
 !/test/src/typings/*.d.ts
 /test/src/**/*.d.ts
+!/test/src/ambient/*.d.ts
 /test/src/**/*.js
 /test/src/**/*.js.map
 

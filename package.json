@@ -1,6 +1,6 @@
 {
-  "name": "dts-bundle",
-  "version": "0.7.3",
+  "name": "@arshaw/dts-bundle",
+  "version": "0.7.3-fork",
   "description": "Export TypeScript .d.ts files as an external module definition",
   "keywords": [
     "typescript",

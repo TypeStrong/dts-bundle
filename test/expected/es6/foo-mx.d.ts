@@ -5,6 +5,7 @@ declare module 'foo-mx' {
     import { A } from "foo-mx/lib/subC";
     import { bar } from "foo-mx/lib/subD";
     import { foo as buzz } from "foo-mx/lib/subE";
+    import "foo-mx/lib/subF";
     export function indexA(): subB.A;
     export function indexB(): subB.B;
     export function indexC(): A;
@@ -49,6 +50,18 @@ declare module 'foo-mx/lib/subD' {
 }
 
 declare module 'foo-mx/lib/subE' {
+    export interface A {
+        name: string;
+    }
+    export class B {
+        name: string;
+    }
+    export default function test(): A;
+    export function foo(): A;
+    export function bar(): A;
+}
+
+declare module 'foo-mx/lib/subF' {
     export interface A {
         name: string;
     }

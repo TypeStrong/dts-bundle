@@ -4,6 +4,7 @@ import * as subB from "./sub";
 import subC, {A} from "./lib/subC";
 import {bar} from "./lib/subD";
 import {foo as buzz} from "./lib/subE";
+import "./lib/subF";
 
 export function indexA() {
 	return subA();

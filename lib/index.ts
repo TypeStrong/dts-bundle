@@ -767,7 +767,7 @@ export function bundle(options: Options): BundleResult {
                 trace(' - declare %s', moduleName);
                 pushUnique(res.exports, moduleName);
                 let modLine: ModLine = {
-                    original: line
+                    original: inSourceTypings(file) ? removeDeclares(line) : line
                 };
                 res.relativeRef.push(modLine); // TODO
                 res.lines.push(modLine);
@@ -779,14 +779,10 @@ export function bundle(options: Options): BundleResult {
                     let [_, sp, static1, pub, static2, ident] = match;
                     line = sp + static1 + static2 + ident;
                 }
-                if (inSourceTypings(file)) {
-                    res.lines.push({
-                        original: removeDeclares(line)
-                    });
-                }
-                else {
-                    res.lines.push({ original: line });
-                }
+
+                res.lines.push({
+                    original: inSourceTypings(file) ? removeDeclares(line) : line
+                });
             }
         });
 
@@ -846,7 +842,7 @@ function replaceImportExportEs6(line: string, replacer: (str: string) => string)
 function removeDeclares(line: string) {
     return line
         .replace(/^(export )?declare /g, '$1')
-        .replace(/^declare (const|let)/g, '$1')
+        .replace(/^\s*declare (const|let|module)/g, '$1')
 }
 
 function replaceExternal(line: string, replacer: (str: string) => string) {

@@ -40,8 +40,8 @@ export interface Options {
     referenceExternals?: boolean;
     emitOnIncludedFileNotFound?: boolean;
     emitOnNoIncludedFileNotFound?: boolean;
-    headerPath: string;
-    headerText: string;
+    headerPath?: string;
+    headerText?: string;
 }
 
 export interface ModLine {

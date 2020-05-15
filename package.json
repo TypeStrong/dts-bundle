@@ -1,6 +1,6 @@
 {
   "name": "dts-bundle",
-  "version": "0.7.3",
+  "version": "0.7.4",
   "description": "Export TypeScript .d.ts files as an external module definition",
   "keywords": [
     "typescript",
@@ -38,12 +38,11 @@
   },
   "main": "./index.js",
   "dependencies": {
-    "@types/detect-indent": "0.1.30",
     "@types/glob": "5.0.30",
     "@types/mkdirp": "0.3.29",
     "@types/node": "8.0.0",
     "commander": "^2.9.0",
-    "detect-indent": "^0.2.0",
+    "detect-indent": "^6.0.0",
     "glob": "^6.0.4",
     "mkdirp": "^0.5.0"
   },

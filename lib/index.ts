@@ -35,6 +35,7 @@ export interface Options {
     separator?: string;
     externals?: boolean;
     exclude?: { (file: string): boolean; } | RegExp;
+    includePrivate?: boolean;
     removeSource?: boolean;
     verbose?: boolean;
     referenceExternals?: boolean;
@@ -99,6 +100,7 @@ export function bundle(options: Options): BundleResult {
 
     const externals = optValue(options.externals, false);
     const exclude = optValue(options.exclude, null);
+    const includePrivate = optValue(options.includePrivate, null);
     const removeSource = optValue(options.removeSource, false);
     const referenceExternals = optValue(options.referenceExternals, false);
     const emitOnIncludedFileNotFound = optValue(options.emitOnIncludedFileNotFound, false);
@@ -688,7 +690,7 @@ export function bundle(options: Options): BundleResult {
             }
 
             // private member
-            if (privateExp.test(line)) {
+            if (!includePrivate && privateExp.test(line)) {
                 queuedJSDoc = null;
                 return;
             }
